@@ -101,7 +101,10 @@ function App() {
         if (realizations.length > 0) {
             const currentRealization = realizations[0];
             return (
-                <Card realization={currentRealization} />
+                <>
+                    <Card realization={currentRealization} />
+                    <CardActions onRate={handleRate} />
+                </>
             );
         } else {
             return <div className="status">No more realizations to rate.</div>;
@@ -119,7 +122,6 @@ function App() {
                     <div className="status">
                         <div>Preferences: {JSON.stringify(userConfig?.preferences)}</div>
                         {renderRealizations()}
-                        <CardActions onRate={handleRate} />
                     </div>
                 );
             case 'disconnected':
