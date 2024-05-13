@@ -130,15 +130,18 @@ button:focus-visible {
   margin: 5px;
   padding: 10px 20px;
   border: none;
-  background-color: #007bff;
-  color: white;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: opacity 0.2s ease;
+  display: flex;
 }
-
+.actions{
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
 .actions button:hover {
-  background-color: #0056b3;
+  opacity: 0.6;
 }
 
 .status {
@@ -147,4 +150,19 @@ button:focus-visible {
   flex-direction: column;
   justify-content: flex-end;
   height: -webkit-fill-available;
+}
+
+.nope {
+  background-color: #646464;
+}
+.dislike{
+  font-size: 2rem;
+  background-color: #ff2600;
+}
+.like{
+  font-size: 2rem;
+  background-color: #14d000;
+}
+.superlike{
+    background-color: #00b6f6;
 }

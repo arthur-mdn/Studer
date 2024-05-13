@@ -6,10 +6,10 @@ import {FaCreativeCommonsNd, FaHeartCrack, FaNeuter} from "react-icons/fa6";
 function CardActions({ onRate }) {
     return (
         <div className="actions">
-            <button onClick={() => onRate('nope')}><FaCreativeCommonsNd/></button>
-            <button onClick={() => onRate('like')}><FaHeart/></button>
-            <button onClick={() => onRate('dislike')}><FaHeartCrack/></button>
-            <button onClick={() => onRate('superlike')}><FaRegStar/></button>
+            <button className={"nope"} onClick={() => onRate('nope')}><FaCreativeCommonsNd/></button>
+            <button className={"dislike"} onClick={() => onRate('dislike')}><FaHeartCrack/></button>
+            <button className={"like"} onClick={() => onRate('like')}><FaHeart/></button>
+            <button className={"superlike"} onClick={() => onRate('superlike')}><FaRegStar/></button>
         </div>
     );
 }
