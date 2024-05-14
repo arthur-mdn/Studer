@@ -49,7 +49,7 @@ function CardDetail({ realization, onBack }) {
 
     return (
         <div className="realization-details">
-            <button className="back-button" style={{ position: "absolute", right: 0 }} onClick={onBack}>
+            <button className="back-button" style={{ position: "absolute"}} onClick={onBack}>
                 Retour
             </button>
             <div className="slider">
