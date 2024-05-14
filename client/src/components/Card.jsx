@@ -1,10 +1,11 @@
 import React from "react";
 import {FaArrowRight, FaArrowRightLong, FaComment, FaInfo, FaMessage} from "react-icons/fa6";
+import config from '../config';
 
 function Card({realization, onView, onAddToChat}) {
     return (
         <div className="realization-card">
-            <img src={realization.image} alt={realization.title}/>
+            <img src={`${config.serverUrl}/${realization.firstImage}`} alt={realization.title}/>
             <div className={"shadow"}></div>
             <div className="realization-info">
                 <h2>{realization.title}</h2>
