@@ -174,7 +174,7 @@ button:focus-visible {
   background-color: #C83E4D;
 }
 .add-to-chat{
-  background-color: #bcafff;
+  background-color: #ffafaf;
   border: 2px solid #C83E4D;
   color: black;
 }
@@ -363,7 +363,7 @@ input[type=text], input[type=number], input[type=url], input[type=email], input[
   max-width: 80%;
 }
 .bot-message{
-  background-color: #00b6f6;
+  background-color: #C83E4D;
   color: white;
   margin-right: auto;
 }
