@@ -447,6 +447,7 @@ margin-left: auto;
   height: 100%!important;
 }
 .back-button{
+  z-index: 4;
   right: 1rem;
 }
 
