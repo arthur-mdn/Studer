@@ -27,6 +27,9 @@ function ChatList({ isOpen, toggleChat, chatHistory, onOpenChatDetail }) {
                         </div>
                     </div>
                 )}
+                <div className={"fc ai-c"} style={{marginTop:"auto",marginBottom:"1rem"}}>
+                    <img src={"/elements/logo.svg"} alt="Logo" style={{width: "6rem"}}/>
+                </div>
             </div>
         </div>
     );
