@@ -443,7 +443,7 @@ margin-left: auto;
   opacity: 0.5;
 }
 
-.slick-slider, .slick-list, .slick-track, .slick-slide, .slick-slide > div, .slick-slide > div > div{
+.slick-slider, .slick-list, .slick-track, .slick-slide, .slick-slide > div, .slick-slide > div > div, .slick-slide >div > div > img{
   height: 100%!important;
 }
 .back-button{
