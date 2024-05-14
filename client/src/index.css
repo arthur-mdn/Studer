@@ -244,6 +244,21 @@ button:focus-visible {
 .g0-25{
   gap: 0.25rem;
 }
+.ta-l{
+    text-align: left;
+
+}
+input[type=text], input[type=number], input[type=url], input[type=email], input[type=tel], input[type=password], input[type=datetime-local], input[type=date], textarea, select, .inputs {
+  color: black;
+  width: 100%;
+  padding: 0px 1em;
+  border-radius: 5px;
+  height: 2.5em;
+  /* border: 1px solid rgb(200, 200, 200); */
+  border: 1.5px solid lightgray;
+  font-size: 16px;
+  background-color: white;
+}
 
 .status.realizations{
   width: 100%;
