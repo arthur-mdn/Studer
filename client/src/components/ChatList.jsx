@@ -1,4 +1,5 @@
 import React from 'react';
+import config from "../config.js";
 
 function ChatList({ isOpen, toggleChat, chatHistory, onOpenChatDetail }) {
     return (
@@ -10,7 +11,7 @@ function ChatList({ isOpen, toggleChat, chatHistory, onOpenChatDetail }) {
             <div className="chat-container">
                 {Object.keys(chatHistory).map(key => (
                     <div key={key} className="chat-session" onClick={() => onOpenChatDetail(key)}>
-                        <img src={chatHistory[key].realization.image} alt="Profile" style={{width: "50px"}}/>
+                        <img src={`${config.serverUrl}/${chatHistory[key].realization.firstImage}`} alt="Profile" style={{width: "50px"}}/>
                         <div className="chat-info">
                             <h4>{chatHistory[key].realization.title}</h4>
                             <p>{chatHistory[key].messages[chatHistory[key].messages.length - 1].text}</p>
