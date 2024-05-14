@@ -1,17 +1,22 @@
 import React from "react";
-import {FaInfo} from "react-icons/fa6";
+import {FaArrowRight, FaArrowRightLong, FaComment, FaInfo, FaMessage} from "react-icons/fa6";
 
-function Card({realization, onView}) {
+function Card({realization, onView, onAddToChat}) {
     return (
         <div className="realization-card">
             <img src={realization.image} alt={realization.title}/>
+            <div className={"shadow"}></div>
             <div className="realization-info">
                 <h2>{realization.title}</h2>
                 <p>{realization.description}</p>
+                <div className={"realization-buttons"}>
+                    <button type={"button"} className={"see-more"} onClick={
+                        onView
+                    }>En savoir plus <FaArrowRightLong/></button>
+                    <button className="add-to-chat" onClick={onAddToChat}><FaComment/></button>
+                </div>
             </div>
-            <button type={"button"} onClick={
-                onView
-            }><FaInfo/></button>
+
         </div>
     );
 }

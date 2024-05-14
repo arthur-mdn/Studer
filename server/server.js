@@ -154,6 +154,29 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('ask_question', async (data) => {
+        try {
+            const { userId, realizationId, question } = data;
+            const user = await User.findOne({ token: userId });
+            const realization = await Realization.findById(realizationId);
+
+            if (!user || !realization) {
+                socket.emit('error', 'User or Realization not found');
+                return;
+            }
+
+            const answer = realization.questions.find(q => q.question === question)?.answer;
+            if (!answer) {
+                socket.emit('error', 'Question not found');
+                return;
+            }
+
+        } catch (error) {
+            console.error('Error asking question:', error);
+            socket.emit('error', 'Error asking question');
+        }
+    })
+
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
     });

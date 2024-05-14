@@ -4,9 +4,10 @@ import config from './config';
 import './App.css';
 import CardActions from './components/CardActions.jsx';
 import Card from "./components/Card.jsx";
-import {FaMessage} from "react-icons/fa6";
 import CardDetail from "./components/CardDetail.jsx";
 import ChatList from "./components/ChatList.jsx";
+import ChatDetail from "./components/ChatDetail.jsx";
+import { FaMessage } from "react-icons/fa6";
 
 function App() {
     const [socket, setSocket] = useState(null);
@@ -15,9 +16,26 @@ function App() {
     const [userConfig, setUserConfig] = useState(null);
     const [realizations, setRealizations] = useState([]);
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [view, setView] = useState('list');
+    const [view, setView] = useState('list'); // 'list', 'detail', 'chatDetail'
     const [selectedRealization, setSelectedRealization] = useState(null);
-    const [chatHistory, setChatHistory] = useState({});
+    const [chatHistory, setChatHistory] = useState(() => {
+        const localData = localStorage.getItem('chatHistory');
+        if (localData) {
+            const parsedHistory = JSON.parse(localData);
+            // Convert askedQuestions back to a Set for each chat session
+            Object.keys(parsedHistory).forEach(key => {
+                if (Array.isArray(parsedHistory[key].askedQuestions)) {
+                    parsedHistory[key].askedQuestions = new Set(parsedHistory[key].askedQuestions);
+                } else {
+                    parsedHistory[key].askedQuestions = new Set();  // Initialize a new Set if not present or invalid
+                }
+            });
+            return parsedHistory;
+        }
+        return {};
+    });
+
+    const [chatDetailId, setChatDetailId] = useState(null);
 
     useEffect(() => {
         const newSocket = io(config.serverUrl, {
@@ -27,7 +45,6 @@ function App() {
         setSocket(newSocket);
 
         newSocket.on('connect', () => {
-            console.log('Connected to server');
             const token = localStorage.getItem('userToken');
             if (token) {
                 setStatus('updating_config');
@@ -47,57 +64,48 @@ function App() {
         });
 
         newSocket.on('config_updated', (config) => {
-            console.log('Config updated:', config);
             setUserConfig(config);
             setStatus('ready');
             newSocket.emit('request_realizations', { userId: config.token });
         });
 
         newSocket.on('realizations', (newRealizations) => {
-            console.log('Realizations received:', newRealizations);
             setRealizations(prev => [...prev, ...newRealizations]);
         });
 
         newSocket.on('preferences_updated', ({ preferences }) => {
-            console.log('Client side Preferences updated:', preferences);
             setUserConfig(config => ({ ...config, preferences }));
         });
 
-        newSocket.on('disconnect', () => {
-            setStatus('disconnected');
-            console.log('Disconnected from server');
-        });
+        newSocket.on('disconnect', () => setStatus('disconnected'));
 
         newSocket.on('connect_error', (err) => {
-            console.error('Connection failed:', err);
             setStatus('connection_failed');
             setError(err.message);
         });
 
         newSocket.on('error', (err) => {
-            console.error('Socket error:', err);
             setStatus('error');
             setError(err);
         });
 
-        return () => {
-            newSocket.disconnect();
-        };
+        return () => newSocket.disconnect();
     }, []);
+
+    // Effect to store chatHistory in localStorage
+    useEffect(() => {
+        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    }, [chatHistory]);
 
     const handleRate = (action) => {
         if (realizations.length > 0 && socket) {
             const currentRealization = realizations[0]._id;
-            console.log('Rating realization:', currentRealization, action);
-
-            // Emit the rating event to the server
             socket.emit('rate_realization', {
                 userId: localStorage.getItem('userToken'),
                 realizationId: currentRealization,
                 action
             });
 
-            // Remove the rated realization from the list using filter
             setRealizations(prev => prev.filter(r => r._id !== currentRealization));
         }
     };
@@ -107,27 +115,104 @@ function App() {
     const handleViewDetails = (realization) => {
         setSelectedRealization(realization);
         setView('detail');
-        console.log('details:', realization);
-    }
-    const handleBack = () => {
+    };
+
+    const handleBackToList = () => {
         setSelectedRealization(null);
         setView('list');
-    }
+    };
+
+    const handleAddToChat = (realization) => {
+        const newChatHistory = { ...chatHistory };
+        if (!newChatHistory[realization._id]) {
+            newChatHistory[realization._id] = {
+                realization,
+                messages: [{ text: "Hey, tu as des questions ?", from: 'bot' }],
+                askedQuestions: new Set() // Ensure this is a Set
+            };
+        }
+        setChatHistory(newChatHistory);
+        toggleChat();
+    };
+
+
+    const handleOpenChatDetail = (realizationId) => {
+        setChatDetailId(realizationId);
+        setSelectedRealization(chatHistory[realizationId].realization);
+        setView('chatDetail');
+    };
+
+    const handleSendQuestion = (realizationId, questionText) => {
+        const newChatHistory = { ...chatHistory };
+        const chatSession = newChatHistory[realizationId];
+
+        if (chatSession && chatSession.realization) {
+            const { realization } = chatSession;
+            let { askedQuestions } = chatSession;
+
+            if (!askedQuestions) {
+                askedQuestions = new Set();  // Ensure askedQuestions is always a Set
+                chatSession.askedQuestions = askedQuestions;
+            }
+
+            if (!askedQuestions.has(questionText)) {
+                const question = realization.questions.find(q => q.question === questionText);
+                if (question) {
+                    chatSession.messages.push({ text: questionText, from: 'user' });
+                    chatSession.messages.push({ text: question.answer, from: 'bot' });
+                    askedQuestions.add(questionText);
+
+                    setChatHistory(newChatHistory);
+
+                    // Update localStorage
+                    localStorage.setItem('chatHistory', JSON.stringify(newChatHistory));
+
+                    // Notify server about the question
+                    socket.emit('ask_question', {
+                        userId: localStorage.getItem('userToken'),
+                        realizationId,
+                        question: questionText,
+                        answer: question.answer
+                    });
+                }
+            }
+        }
+    };
+
+
+
     const renderRealizations = () => {
-        if (view === 'list' && realizations.length > 0) {
-            const currentRealization = realizations[0];
-            return (
-                <>
-                    <Card realization={currentRealization} onView={() => handleViewDetails(currentRealization)} />
-                    <CardActions onRate={handleRate} />
-                </>
-            );
-        } else if (view === 'detail' && selectedRealization) {
-            return (
-                <CardDetail realization={selectedRealization} onBack={handleBack}/>
-            );
-        } else {
-            return <div className="status">No more realizations to rate.</div>;
+        switch (view) {
+            case 'list':
+                if (realizations.length > 0) {
+                    const currentRealization = realizations[0];
+                    return (
+                        <>
+                            <Card realization={currentRealization} onView={() => handleViewDetails(currentRealization)} onAddToChat={() => handleAddToChat(currentRealization)} />
+                            <CardActions onRate={handleRate} />
+                        </>
+                    );
+                } else {
+                    return <div className="status">No more realizations to rate.</div>;
+                }
+            case 'detail':
+                if (selectedRealization) {
+                    return <CardDetail realization={selectedRealization} onBack={handleBackToList} />;
+                }
+                break;
+            case 'chatDetail':
+                if (chatDetailId && chatHistory[chatDetailId]) {
+                    return (
+                        <ChatDetail
+                            chat={chatHistory[chatDetailId]}
+                            onSendQuestion={(questionText) => handleSendQuestion(chatDetailId, questionText)}
+                            onBackToList={handleBackToList}
+                        />
+                    );
+                }
+                break;
+            default:
+                return <div className="status">No more realizations to rate.</div>;
         }
     };
 
@@ -145,7 +230,7 @@ function App() {
                                 <FaMessage/>
                             </button>
                         </div>
-                        <ChatList isOpen={isChatOpen} toggleChat={toggleChat} preferences={userConfig?.preferences} />
+                        <ChatList isOpen={isChatOpen} toggleChat={toggleChat} chatHistory={chatHistory} onOpenChatDetail={handleOpenChatDetail} />
                         <div className="status realizations">
                             {renderRealizations()}
                         </div>
@@ -175,7 +260,10 @@ function App() {
             <button id={"reset"} onClick={() => {
                 localStorage.clear();
                 window.location.reload();
-            }}>Reset</button>
+            }}>
+                {JSON.stringify(userConfig?.preferences)}
+                Reset
+            </button>
             {renderContent()}
         </div>
     );
