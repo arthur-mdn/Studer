@@ -17,6 +17,16 @@ function ChatList({ isOpen, toggleChat, chatHistory, onOpenChatDetail }) {
                         </div>
                     </div>
                 ))}
+                {Object.keys(chatHistory).length === 0 && (
+                    <div className="chat-session">
+                        <div className="chat-info fr g1 ai-c">
+                            <div className={"fc ai-c jc-c"} style={{backgroundColor:"#C83E4D",padding:"0.5rem", borderRadius:"6rem"}}>
+                                <img src={"/elements/others/chat-empty.svg"} style={{width:"2rem",height:"2rem",borderRadius:0,objectFit:"contain"}}/>
+                            </div>
+                            <h4>Vous n'avez pas encore ouvert de conversation.</h4>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
