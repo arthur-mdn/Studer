@@ -319,6 +319,9 @@ input[type=text], input[type=number], input[type=url], input[type=email], input[
 .ai-c{
     align-items: center;
 }
+.status.realizations{
+  width: calc(100% - 300px);
+}
 
 .realization-details{
   width: 100%;
@@ -430,6 +433,9 @@ margin-left: auto;
   }
   .chat.open{
     display: flex;
+  }
+  .status.realizations{
+    width: 100%;
   }
 }
 
