@@ -19,7 +19,6 @@ function New() {
         year: (new Date()).getFullYear()
     });
 
-    // Ref for the form to reset it including file inputs
     const formRef = useRef(null);
 
     const handleChange = (e) => {
@@ -62,6 +61,18 @@ function New() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const totalScore = Object.values(realization.scores).reduce((acc, score) => acc + score, 0);
+        if (totalScore !== 5) {
+            alert("Le total des scores doit être exactement 5.");
+            return;
+        }
+
+        if (!realization.firstImage) {
+            alert("Veuillez fournir au moins une image principale.");
+            return;
+        }
+
         const formData = new FormData();
         formData.append('title', realization.title);
         formData.append('description', realization.description);
@@ -127,11 +138,11 @@ function New() {
             <form ref={formRef} onSubmit={handleSubmit} encType="multipart/form-data">
                 <div>
                     <label htmlFor="title">Titre: </label>
-                    <input type="text" id="title" name="title" value={realization.title} onChange={handleChange} />
+                    <input type="text" id="title" name="title" required value={realization.title} onChange={handleChange} />
                 </div>
                 <div>
                     <label htmlFor="description">Description: </label>
-                    <textarea id="description" name="description" value={realization.description} onChange={handleChange} />
+                    <textarea id="description" style={{resize:"vertical", height:"5rem"}} name="description" required value={realization.description} onChange={handleChange} />
                 </div>
                 <div>
                     <label htmlFor="firstImage">Image Principale: </label>
