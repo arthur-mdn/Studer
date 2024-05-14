@@ -1,5 +1,4 @@
-// New.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import config from "./config.js";
 
 function New() {
@@ -19,6 +18,9 @@ function New() {
         duration: 1,
         year: (new Date()).getFullYear()
     });
+
+    // Ref for the form to reset it including file inputs
+    const formRef = useRef(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -88,6 +90,11 @@ function New() {
                 const result = await response.json();
                 console.log('Success:', result);
                 alert('Realization ajoutée avec succès');
+
+                // Reset the form using the form reference
+                formRef.current.reset();
+
+                // Also reset the state
                 setRealization({
                     firstImage: null,
                     images: [],
@@ -117,7 +124,7 @@ function New() {
         <div className={"fc ta-l g0-5 p1"}>
             <h1>Ajouter un Nouveau Projet</h1>
             <p>Interface pour ajouter de nouvelles informations.</p>
-            <form onSubmit={handleSubmit} encType="multipart/form-data">
+            <form ref={formRef} onSubmit={handleSubmit} encType="multipart/form-data">
                 <div>
                     <label htmlFor="title">Titre: </label>
                     <input type="text" id="title" name="title" value={realization.title} onChange={handleChange} />
@@ -136,7 +143,7 @@ function New() {
                 </div>
                 <div>
                     <label>Type de Projet: </label>
-                    <input type="text" name="type" value={realization.type} onChange={handleChange} placeholder="Projet universitaire" />
+                    <input type="text" name="type" value={realization.type} required onChange={handleChange} placeholder="Projet universitaire" />
                 </div>
                 <div>
                     <label htmlFor="difficulty">Difficulté (1-5): </label>
@@ -160,21 +167,21 @@ function New() {
                 </div>
                 <div>
                     <label htmlFor="year">Année de Réalisation: </label>
-                    <input type="number" id="year" name="year" value={realization.year} onChange={handleChange} />
+                    <input type="number" id="year" name="year" value={realization.year} required onChange={handleChange} />
                 </div>
                 <div>
                     <label>Scores (répartir un total max de 5 points):</label>
                     <div>
                         <label htmlFor="crea">Création: </label>
-                        <input type="number" id="crea" name="crea" value={realization.scores.crea} onChange={handleScoreChange} />
+                        <input type="number" id="crea" name="crea" value={realization.scores.crea} required onChange={handleScoreChange} />
                     </div>
                     <div>
                         <label htmlFor="com">Communication: </label>
-                        <input type="number" id="com" name="com" value={realization.scores.com} onChange={handleScoreChange} />
+                        <input type="number" id="com" name="com" value={realization.scores.com} required onChange={handleScoreChange} />
                     </div>
                     <div>
                         <label htmlFor="dev">Développement: </label>
-                        <input type="number" id="dev" name="dev" value={realization.scores.dev} onChange={handleScoreChange} />
+                        <input type="number" id="dev" name="dev" value={realization.scores.dev} required onChange={handleScoreChange} />
                     </div>
                 </div>
                 <div>
