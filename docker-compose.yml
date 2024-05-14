@@ -20,9 +20,6 @@ services:
   Studer-server:
     build:
       context: ./server
-    env_file: ./server/.env
-    environment:
-      DB_URI: mongodb://Studer-mongodb:27017/Studer
     image: studer-server
     labels:
       - "traefik.enable=true"
