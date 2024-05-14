@@ -12,7 +12,7 @@ root.render(
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<App />} />
-                <Route path="/new" element={<New />} />
+                <Route path="/realization/new" element={<New />} />
             </Routes>
         </BrowserRouter>
     </React.StrictMode>
