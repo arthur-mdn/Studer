@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  Studer-mongodb:
+    image: mongo
+    volumes:
+      - Studer_mongodb_data:/data/db
+
+  Studer-client:
+    build:
+      context: ./client
+    image: studer-client
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.Studer-client.rule=Host(`studer.mondon.pro`)"
+      - "traefik.http.routers.Studer-client.entrypoints=websecure"
+      - "traefik.http.routers.Studer-client.tls.certresolver=myresolver"
+
+
+  Studer-server:
+    build:
+      context: ./server
+    env_file: ./server/.env
+    environment:
+      DB_URI: mongodb://Studer-mongodb:27017/Studer
+    image: studer-server
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.Studer-server.rule=Host(`api.studer.mondon.pro`)"
+      - "traefik.http.services.Studer-server.loadbalancer.server.port=3001"
+      - "traefik.http.routers.Studer-server.entrypoints=websecure"
+      - "traefik.http.routers.Studer-server.tls.certresolver=myresolver"
+    volumes:
+      - uploads_volume:/app/uploads
+volumes:
+  Studer_mongodb_data:
+    driver: local
+  uploads_volume:
+    driver: local
