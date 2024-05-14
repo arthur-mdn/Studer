@@ -82,18 +82,34 @@ function New() {
         try {
             const response = await fetch(`${config.serverUrl}/realizations/`, {
                 method: 'POST',
-                body: formData  // No headers for multipart/form-data; fetch sets them based on formData
+                body: formData
             });
             if (response.ok) {
                 const result = await response.json();
                 console.log('Success:', result);
-                alert('Realization added successfully');
+                alert('Realization ajoutée avec succès');
+                setRealization({
+                    firstImage: null,
+                    images: [],
+                    title: '',
+                    description: '',
+                    questions: [],
+                    scores: {
+                        crea: 0,
+                        com: 0,
+                        dev: 0
+                    },
+                    type: '',
+                    difficulty: 1,
+                    duration: 1,
+                    year: (new Date()).getFullYear()
+                });
             } else {
-                throw new Error('Network response was not ok.');
+                throw new Error('Réponse du serveur incorrecte.');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Failed to add realization');
+            alert("Impossible d'ajouter la réalisation. Veuillez réessayer.");
         }
     };
 
