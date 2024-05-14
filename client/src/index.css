@@ -439,6 +439,9 @@ margin-left: auto;
   }
 }
 
+.o0-5{
+  opacity: 0.5;
+}
 
 .slick-slider, .slick-list, .slick-track, .slick-slide, .slick-slide > div, .slick-slide > div > div{
   height: 100%!important;
