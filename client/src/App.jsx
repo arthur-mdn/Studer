@@ -4,6 +4,7 @@ import config from './config';
 import './App.css';
 import CardActions from './components/CardActions.jsx';
 import Card from "./components/Card.jsx";
+import {FaMessage} from "react-icons/fa6";
 
 function App() {
     const [socket, setSocket] = useState(null);
@@ -102,7 +103,7 @@ function App() {
             const currentRealization = realizations[0];
             return (
                 <>
-                    <Card realization={currentRealization} />
+                    <Card realization={currentRealization}/>
                     <CardActions onRate={handleRate} />
                 </>
             );
@@ -119,10 +120,39 @@ function App() {
                 return <div className="status">Requesting a unique code...</div>;
             case 'ready':
                 return (
-                    <div className="status">
-                        <div>Preferences: {JSON.stringify(userConfig?.preferences)}</div>
-                        {renderRealizations()}
-                    </div>
+                    <>
+                        <div className={"mobile-menu display-mobile"}>
+                            <button
+                            onClick={() => {
+                                document.querySelector(".chat").classList.toggle("open");
+                            } }
+                            >
+                                <FaMessage/>
+                            </button>
+                        </div>
+                        <div className={"chat"}>
+                            <div className={"title"}>
+                                MMI Studer
+                                <div className={"close display-mobile"} onClick={() => {
+                                    document.querySelector(".chat").classList.toggle("open");
+                                }}>X</div>
+                            </div>
+                            <ul className={"chats"}>
+                                <li>
+                                    <img src={"/elements/others/profile.jpeg"}/>
+                                    <div>
+                                        <h4 className={"name"}>John Doe</h4>
+                                        <div className={"message"}>Hey, tu as des questions ?</div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div className={"mt-a p1"}>{JSON.stringify(userConfig?.preferences)}</div>
+                        </div>
+                        <div className="status realizations">
+                            {renderRealizations()}
+                        </div>
+                    </>
+
                 );
             case 'disconnected':
                 return <div className="status">Disconnected. Attempting to reconnect...</div>;
@@ -145,7 +175,7 @@ function App() {
 
     return (
         <div className="App">
-            <button onClick={() => {
+            <button id={"reset"} onClick={() => {
                 localStorage.clear();
                 window.location.reload();
             }}>Reset
