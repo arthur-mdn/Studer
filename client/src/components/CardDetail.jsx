@@ -1,5 +1,6 @@
 import React from "react";
 import {FaInfo} from "react-icons/fa6";
+import config from "../config.js";
 
 function CardDetail({realization, onBack}) {
     const scoreLabels = {
@@ -32,7 +33,7 @@ function CardDetail({realization, onBack}) {
             }>Retour
             </button>
             <div className={"slider"}>
-                <img src={realization.image} alt={realization.title}/>
+                <img src={`${config.serverUrl}/${realization.firstImage}`} alt={realization.title}/>
             </div>
             <div className={"fc g0-5 w100"}>
                 <h2>{realization.title}</h2>
