@@ -400,6 +400,12 @@ margin-left: auto;
   .display-mobile{
     display: flex;
   }
+  .mobile-menu{
+    position: absolute;
+    z-index: 4;
+    top:1rem;
+    left: 1rem;
+  }
   .chat{
     position: fixed;
     bottom: 0;
