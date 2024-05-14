@@ -4,8 +4,9 @@ import config from './config';
 import './App.css';
 import CardActions from './components/CardActions.jsx';
 import Card from "./components/Card.jsx";
-import Chat from "./components/Chat.jsx";
 import {FaMessage} from "react-icons/fa6";
+import CardDetail from "./components/CardDetail.jsx";
+import ChatList from "./components/ChatList.jsx";
 
 function App() {
     const [socket, setSocket] = useState(null);
@@ -14,6 +15,9 @@ function App() {
     const [userConfig, setUserConfig] = useState(null);
     const [realizations, setRealizations] = useState([]);
     const [isChatOpen, setIsChatOpen] = useState(false);
+    const [view, setView] = useState('list');
+    const [selectedRealization, setSelectedRealization] = useState(null);
+    const [chatHistory, setChatHistory] = useState({});
 
     useEffect(() => {
         const newSocket = io(config.serverUrl, {
@@ -98,16 +102,29 @@ function App() {
         }
     };
 
-    const toggleChat = () => setIsChatOpen(!isChatOpen);  // Toggle chat view
+    const toggleChat = () => setIsChatOpen(!isChatOpen);
 
+    const handleViewDetails = (realization) => {
+        setSelectedRealization(realization);
+        setView('detail');
+        console.log('details:', realization);
+    }
+    const handleBack = () => {
+        setSelectedRealization(null);
+        setView('list');
+    }
     const renderRealizations = () => {
-        if (realizations.length > 0) {
+        if (view === 'list' && realizations.length > 0) {
             const currentRealization = realizations[0];
             return (
                 <>
-                    <Card realization={currentRealization} />
+                    <Card realization={currentRealization} onView={() => handleViewDetails(currentRealization)} />
                     <CardActions onRate={handleRate} />
                 </>
+            );
+        } else if (view === 'detail' && selectedRealization) {
+            return (
+                <CardDetail realization={selectedRealization} onBack={handleBack}/>
             );
         } else {
             return <div className="status">No more realizations to rate.</div>;
@@ -128,7 +145,7 @@ function App() {
                                 <FaMessage/>
                             </button>
                         </div>
-                        <Chat isOpen={isChatOpen} toggleChat={toggleChat} preferences={userConfig?.preferences} />
+                        <ChatList isOpen={isChatOpen} toggleChat={toggleChat} preferences={userConfig?.preferences} />
                         <div className="status realizations">
                             {renderRealizations()}
                         </div>

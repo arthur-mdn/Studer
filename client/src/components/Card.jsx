@@ -1,7 +1,7 @@
 import React from "react";
 import {FaInfo} from "react-icons/fa6";
 
-function Card({realization}) {
+function Card({realization, onView}) {
     return (
         <div className="realization-card">
             <img src={realization.image} alt={realization.title}/>
@@ -9,7 +9,9 @@ function Card({realization}) {
                 <h2>{realization.title}</h2>
                 <p>{realization.description}</p>
             </div>
-            <button type={"button"} ><FaInfo/></button>
+            <button type={"button"} onClick={
+                onView
+            }><FaInfo/></button>
         </div>
     );
 }
