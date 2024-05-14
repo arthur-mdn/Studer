@@ -312,6 +312,13 @@ input[type=text], input[type=number], input[type=url], input[type=email], input[
 .jc-sb{
   justify-content: space-between;
 }
+.jc-c{
+    justify-content: center;
+
+}
+.ai-c{
+    align-items: center;
+}
 
 .realization-details{
   width: 100%;

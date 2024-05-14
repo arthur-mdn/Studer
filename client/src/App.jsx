@@ -128,11 +128,14 @@ function App() {
             newChatHistory[realization._id] = {
                 realization,
                 messages: [{ text: "Hey, tu as des questions ?", from: 'bot' }],
-                askedQuestions: new Set() // Ensure this is a Set
+                askedQuestions: new Set()
             };
         }
         setChatHistory(newChatHistory);
-        toggleChat();
+        setIsChatOpen(false);
+        setChatDetailId(realization._id);
+        setSelectedRealization(realization);
+        setView('chatDetail');
     };
 
 
@@ -197,7 +200,7 @@ function App() {
                 }
             case 'detail':
                 if (selectedRealization) {
-                    return <CardDetail realization={selectedRealization} onBack={handleBackToList} />;
+                    return <CardDetail realization={selectedRealization} onBack={handleBackToList} onOpenChat={()=> handleAddToChat(selectedRealization)} />;
                 }
                 break;
             case 'chatDetail':

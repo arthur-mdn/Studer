@@ -3,9 +3,10 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import config from "../config.js";
+import {FaComment} from "react-icons/fa6";
 
 
-function CardDetail({ realization, onBack }) {
+function CardDetail({ realization, onBack, onOpenChat }) {
     const scoreLabels = {
         dev: "Développement",
         com: "Communication",
@@ -28,10 +29,9 @@ function CardDetail({ realization, onBack }) {
         return icons;
     }
 
-    // Prepare images for the slider
-    const images = [realization.firstImage, ...realization.images].map((img, index) => (
+    const images = [realization.firstImage, ...(realization.images || [])].filter(img => img).map((img, index) => (
         <div key={index}>
-            <img src={`${config.serverUrl}/${img}`} alt={`Slide ${index}`} />
+            <img src={`${config.serverUrl}/${img}`} alt={`Slide ${index}`} style={{ width: "100%", height: "auto" }} />
         </div>
     ));
 
@@ -49,7 +49,7 @@ function CardDetail({ realization, onBack }) {
 
     return (
         <div className="realization-details">
-            <button className="back-button" style={{ position: "absolute"}} onClick={onBack}>
+            <button className="back-button" style={{position: "absolute"}} onClick={onBack}>
                 Retour
             </button>
             <div className="slider">
@@ -88,6 +88,10 @@ function CardDetail({ realization, onBack }) {
                         <h4>Année de réalisation : </h4> {realization.year}
                     </div>
                 </div>
+            </div>
+            <div className={"fc ai-c jc-c"}>
+                <h3>Tu as une question ?</h3>
+                <button className="add-to-chat fr ai-c g0-5" onClick={onOpenChat}><FaComment/>Accéder au chat</button>
             </div>
         </div>
     );
