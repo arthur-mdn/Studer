@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const realizationSchema = new Schema({
-    image: String,
+    firstImage: String,
+    images: [String],
     title: String,
     description: String,
     questions: [{

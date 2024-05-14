@@ -8,8 +8,13 @@ const cors = require('cors');
 const User = require('./models/User');
 const Realization = require('./models/Realization');
 
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
 const database = require('./others/database');
 const config = require('./others/config');
+const upload = multer({ dest: 'uploads/' });
 
 const app = express();
 const server = http.createServer(app);
@@ -181,6 +186,55 @@ io.on('connection', (socket) => {
         console.log('User disconnected:', socket.id);
     });
 });
+
+app.post('/realizations', upload.fields([{ name: 'firstImage' }, { name: 'images' }]), async (req, res) => {
+    try {
+        console.log('Received fields:', req.body);
+        console.log('Received files:', req.files);
+
+        // Parse scores safely
+        let parsedScores;
+        try {
+            parsedScores = JSON.parse(req.body.scores);
+        } catch (error) {
+            console.error('Error parsing scores:', error);
+            return res.status(400).json({ message: 'Invalid scores format' });
+        }
+
+        // Parse questions safely
+        let parsedQuestions;
+        if (typeof req.body.questions === 'string') {
+            try {
+                parsedQuestions = JSON.parse(req.body.questions);
+            } catch (error) {
+                console.error('Error parsing questions string:', error);
+                return res.status(400).json({ message: 'Invalid questions format' });
+            }
+        } else {
+            parsedQuestions = req.body.questions || [];
+        }
+
+        const realization = new Realization({
+            title: req.body.title,
+            description: req.body.description,
+            firstImage: req.files['firstImage'] ? req.files['firstImage'][0].path : '',
+            images: req.files['images'] ? req.files['images'].map(file => file.path) : [],
+            type: req.body.type,
+            difficulty: Number(req.body.difficulty),
+            duration: Number(req.body.duration),
+            year: Number(req.body.year),
+            scores: parsedScores,
+            questions: parsedQuestions
+        });
+
+        await realization.save();
+        res.status(201).json({ message: 'Realization added successfully', realization });
+    } catch (error) {
+        console.error('Failed to add realization:', error);
+        res.status(500).json({ message: 'Failed to add realization' });
+    }
+});
+
 
 server.listen(process.env.PORT || 3000, () => {
     console.log(`Server started on port ${process.env.PORT || 3000}`);
