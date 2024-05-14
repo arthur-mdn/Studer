@@ -27,7 +27,7 @@ a {
   text-decoration: inherit;
 }
 a:hover {
-  color: #A700AF;
+  color: #C83E4D;
 }
 ul, li{
     list-style: none;
@@ -171,11 +171,11 @@ button:focus-visible {
   align-items: center;
   gap: 0.5rem;
   border-radius: 150px;
-  background-color: #A700AF;
+  background-color: #C83E4D;
 }
 .add-to-chat{
   background-color: #bcafff;
-  border: 2px solid #A700AF;
+  border: 2px solid #C83E4D;
   color: black;
 }
 .actions button {
@@ -287,12 +287,12 @@ input[type=text], input[type=number], input[type=url], input[type=email], input[
   font-size: 1rem;
   padding: 0.5rem;
   font-weight: bold;
-  background-color: #A700AF;
+  background-color: #C83E4D;
   color: white;
 }
 .tag{
   padding: 0 1rem;
-  border: 2px solid #A700AF;
+  border: 2px solid #C83E4D;
   border-radius: 1.5rem;
 }
 .project-detail-item{

@@ -88,10 +88,12 @@ function CardDetail({ realization, onBack, onOpenChat }) {
                         <h4>Année de réalisation : </h4> {realization.year}
                     </div>
                 </div>
-            </div>
-            <div className={"fc ai-c jc-c"}>
-                <h3>Tu as une question ?</h3>
-                <button className="add-to-chat fr ai-c g0-5" onClick={onOpenChat}><FaComment/>Accéder au chat</button>
+
+                <div className={"fc ai-c jc-c"}>
+                    <h3>Tu as une question ?</h3>
+                    <button className="add-to-chat fr ai-c g0-5" onClick={onOpenChat}><FaComment/>Accéder au chat
+                    </button>
+                </div>
             </div>
         </div>
     );
