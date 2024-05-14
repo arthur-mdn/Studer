@@ -4,6 +4,7 @@ import config from './config';
 import './App.css';
 import CardActions from './components/CardActions.jsx';
 import Card from "./components/Card.jsx";
+import Chat from "./components/Chat.jsx";
 import {FaMessage} from "react-icons/fa6";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
     const [error, setError] = useState(null);
     const [userConfig, setUserConfig] = useState(null);
     const [realizations, setRealizations] = useState([]);
+    const [isChatOpen, setIsChatOpen] = useState(false);
 
     useEffect(() => {
         const newSocket = io(config.serverUrl, {
@@ -96,14 +98,14 @@ function App() {
         }
     };
 
-
+    const toggleChat = () => setIsChatOpen(!isChatOpen);  // Toggle chat view
 
     const renderRealizations = () => {
         if (realizations.length > 0) {
             const currentRealization = realizations[0];
             return (
                 <>
-                    <Card realization={currentRealization}/>
+                    <Card realization={currentRealization} />
                     <CardActions onRate={handleRate} />
                 </>
             );
@@ -122,37 +124,15 @@ function App() {
                 return (
                     <>
                         <div className={"mobile-menu display-mobile"}>
-                            <button
-                            onClick={() => {
-                                document.querySelector(".chat").classList.toggle("open");
-                            } }
-                            >
+                            <button onClick={toggleChat}>
                                 <FaMessage/>
                             </button>
                         </div>
-                        <div className={"chat"}>
-                            <div className={"title"}>
-                                MMI Studer
-                                <div className={"close display-mobile"} onClick={() => {
-                                    document.querySelector(".chat").classList.toggle("open");
-                                }}>X</div>
-                            </div>
-                            <ul className={"chats"}>
-                                <li>
-                                    <img src={"/elements/others/profile.jpeg"}/>
-                                    <div>
-                                        <h4 className={"name"}>John Doe</h4>
-                                        <div className={"message"}>Hey, tu as des questions ?</div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div className={"mt-a p1"}>{JSON.stringify(userConfig?.preferences)}</div>
-                        </div>
+                        <Chat isOpen={isChatOpen} toggleChat={toggleChat} preferences={userConfig?.preferences} />
                         <div className="status realizations">
                             {renderRealizations()}
                         </div>
                     </>
-
                 );
             case 'disconnected':
                 return <div className="status">Disconnected. Attempting to reconnect...</div>;
@@ -178,8 +158,7 @@ function App() {
             <button id={"reset"} onClick={() => {
                 localStorage.clear();
                 window.location.reload();
-            }}>Reset
-            </button>
+            }}>Reset</button>
             {renderContent()}
         </div>
     );

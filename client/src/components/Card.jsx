@@ -9,7 +9,7 @@ function Card({realization}) {
                 <h2>{realization.title}</h2>
                 <p>{realization.description}</p>
             </div>
-            <button type={"button"}><FaInfo/></button>
+            <button type={"button"} ><FaInfo/></button>
         </div>
     );
 }
