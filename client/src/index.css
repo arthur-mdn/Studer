@@ -458,9 +458,4 @@ margin-left: auto;
   .realization-details{
     flex-direction: column;
   }
-  .back-button{
-    left: 315px;
-    z-index: 4;
-    right: auto;
-  }
 }
