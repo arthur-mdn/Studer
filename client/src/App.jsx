@@ -181,12 +181,6 @@ function App() {
         }
     };
 
-    //useEffect to display realizationsCount each time it changes
-    useEffect(() => {
-        console.log("quizzes lenght", quizzes.length)
-        console.log("quizzes", quizzes)
-    }, [realizationCount]);
-
     const toggleChat = () => setIsChatOpen(!isChatOpen);
 
     const handleViewDetails = (realization) => {
