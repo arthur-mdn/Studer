@@ -509,6 +509,23 @@ margin-left: auto;
 }
 
 
+.text-container {
+  display: flex; /* Keeps text inline and allows wrapping */
+  flex-wrap: wrap; /* Allows elements to wrap onto the next line */
+  align-items: baseline; /* Keeps text aligned nicely */
+  gap: 0.25rem; /* Adjust the gap as needed */
+  font-size: 1rem;
+  color: #000; /* Default text color */
+}
+
+.highlight {
+  color: #C83E4D; /* Highlight color */
+  font-weight: bold; /* Optional: if you want the highlighted text to be bold */
+  /* Remove any block-like behavior */
+  display: inline; /* Ensures it doesn’t act like a block */
+}
+
+
 
 @media (max-width: 1200px) {
   .realization-details{

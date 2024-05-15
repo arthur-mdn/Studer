@@ -152,7 +152,7 @@ function App() {
                 boutonClose: false,
                 titre: "Félicitations !",
                 htmlContent: `
-                <div class="fr g0-25 ai-c ws-nw fw-w">Selon moi, le parcours <p style="color: #C83E4D;margin: 0;font-weight: bold">${parcours}</p> a l'air de t'intéresser !</div>
+                <div>Selon moi, le parcours <span style="color: #C83E4D;font-weight: bold">${parcours}</span> a l'air de t'intéresser !</div>
                 <br> 
                 <div class="fc jc-c">
                     <p style="margin:0">C’est à ton tour de tenter de le séduire avec l’épreuve de séduction. Pour trouver ton match parfait, tu vas te retrouver face à des choix. Il n’y a pas de bonnes ou mauvaises réponses.</p>
@@ -178,7 +178,9 @@ function App() {
                 boutonClose: true,
                 titre: "Bienvenue sur Studer.",
                 htmlContent:
-                    `<div class="fr g0-25 ai-c">Le site pour <strong style="margin:0;color: #C83E4D">matcher avec ton avenir !</strong> </div>
+                    `<div>
+                              Le site <span style="color: #C83E4D;">pour matcher avec ton avenir !</span>
+                            </div>
                 <br>
                 À travers de merveilleuses réalisations, trois parcours MMI vont chercher à te séduire..
                 <br>
