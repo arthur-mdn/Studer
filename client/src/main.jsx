@@ -10,15 +10,13 @@ import NewQuiz from "./NewQuiz.jsx";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <ModaleProvider>
-                <Routes>
-                    <Route path="/" element={<App />} />
-                    <Route path="/realization/new" element={<NewRealization />} />
-                    <Route path="/quiz/new" element={<NewQuiz />} />
-                </Routes>
-            </ModaleProvider>
-        </BrowserRouter>
-    </React.StrictMode>
+    <BrowserRouter>
+        <ModaleProvider>
+            <Routes>
+                <Route path="/" element={<App />} />
+                <Route path="/realization/new" element={<NewRealization />} />
+                <Route path="/quiz/new" element={<NewQuiz />} />
+            </Routes>
+        </ModaleProvider>
+    </BrowserRouter>
 );
