@@ -9,6 +9,7 @@ import ChatList from "./components/ChatList.jsx";
 import ChatDetail from "./components/ChatDetail.jsx";
 import { FaMessage } from "react-icons/fa6";
 import {useModal} from "./components/Modale/ModaleContext";
+import QuizCard from "./components/QuizCard.jsx";
 
 function App() {
     const [socket, setSocket] = useState(null);
@@ -38,6 +39,9 @@ function App() {
     });
 
     const [chatDetailId, setChatDetailId] = useState(null);
+    const [quizzes, setQuizzes] = useState([]);
+    const [selectedQuiz, setSelectedQuiz] = useState(null);
+    const [realizationCount, setRealizationCount] = useState(0);
 
     useEffect(() => {
         const newSocket = io(config.serverUrl, {
@@ -52,6 +56,7 @@ function App() {
                 setStatus('updating_config');
                 newSocket.emit('update_config', { userId: token });
                 newSocket.emit('request_realizations', { userId: token });
+                newSocket.emit('request_quizzes', { userId: token });
             } else {
                 setStatus('requesting_code');
                 newSocket.emit('request_code');
@@ -63,16 +68,22 @@ function App() {
             setUserConfig(config);
             setStatus('ready');
             newSocket.emit('request_realizations', { userId: config.token });
+            newSocket.emit('request_quizzes', { userId: config.token });
         });
 
         newSocket.on('config_updated', (config) => {
             setUserConfig(config);
             setStatus('ready');
             newSocket.emit('request_realizations', { userId: config.token });
+            newSocket.emit('request_quizzes', { userId: config.token });
         });
 
         newSocket.on('realizations', (newRealizations) => {
             setRealizations(prev => [...prev, ...newRealizations]);
+        });
+
+        newSocket.on('quizzes', (newQuizzes) => {
+            setQuizzes(prev => [...prev, ...newQuizzes]);
         });
 
         newSocket.on('preferences_updated', ({ preferences }) => {
@@ -158,8 +169,20 @@ function App() {
             });
 
             setRealizations(prev => prev.filter(r => r._id !== currentRealization));
+            setRealizationCount(prev => prev + 1);
+
+            if ((realizationCount + 1) % 3 === 0 && quizzes.length > 0) {
+                setSelectedQuiz(quizzes.shift());
+                setView('quiz');
+            }
         }
     };
+
+    //useEffect to display realizationsCount each time it changes
+    useEffect(() => {
+        console.log("Realizations count:", realizationCount);
+        console.log("quizzes lenght", quizzes.length)
+    }, [realizationCount]);
 
     const toggleChat = () => setIsChatOpen(!isChatOpen);
 
@@ -233,6 +256,25 @@ function App() {
         }
     };
 
+    const handleQuizAnswer = (answer) => {
+        if (selectedQuiz && socket) {
+            const { _id, parcours, answers } = selectedQuiz;
+            const answerObj = answers.find(ans => ans.response === answer);
+
+            if (answerObj) {
+                socket.emit('answer_quiz', {
+                    userId: localStorage.getItem('userToken'),
+                    quizId: _id,
+                    parcours: parcours,
+                    influence: answerObj.influence
+                });
+                socket.emit('request_quizzes', { userId: localStorage.getItem('userToken') });
+
+            }
+            setSelectedQuiz(null);
+            setView('list');
+        }
+    };
 
 
     const renderRealizations = () => {
@@ -262,6 +304,13 @@ function App() {
                             onSendQuestion={(questionText) => handleSendQuestion(chatDetailId, questionText)}
                             onBackToList={handleBackToList}
                         />
+                    );
+                }
+                break;
+            case 'quiz':
+                if (selectedQuiz) {
+                    return (
+                        <QuizCard quiz={selectedQuiz} onAnswer={handleQuizAnswer} />
                     );
                 }
                 break;

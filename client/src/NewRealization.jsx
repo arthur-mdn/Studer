@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import config from "./config.js";
 
-function New() {
+function NewRealization() {
     const [realization, setRealization] = useState({
         firstImage: null,
         images: [],
@@ -211,4 +211,4 @@ function New() {
     );
 }
 
-export default New;
+export default NewRealization;

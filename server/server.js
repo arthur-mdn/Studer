@@ -7,6 +7,7 @@ const uuid = require('uuid');
 const cors = require('cors');
 const User = require('./models/User');
 const Realization = require('./models/Realization');
+const Quiz = require('./models/Quiz');
 
 const multer = require('multer');
 const path = require('path');
@@ -73,6 +74,16 @@ async function getRandomRealizations(user, size = 1) {
     return realizations;
 }
 
+async function getRandomQuizzes(user, size = 1) {
+    const sampleSize = Math.max(1, parseInt(size, 10));
+
+    const seenIds = user.seenQuizzes.map(id => new mongoose.Types.ObjectId(id));
+    const quizzes = await Quiz.aggregate([
+        { $match: { _id: { $nin: seenIds } } },
+        { $sample: { size: sampleSize } }
+    ]);
+    return quizzes;
+}
 
 
 // Socket.IO logic
@@ -124,6 +135,19 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('request_quizzes', async (data) => {
+        try {
+            const user = await User.findOne({ token: data.userId });
+            if (!user) {
+                socket.emit('error', 'User not found');
+                return;
+            }
+            const quizzes = await getRandomQuizzes(user, 1);
+            socket.emit('quizzes', quizzes);
+        } catch (error) {
+            socket.emit('error', 'Error fetching quizzes');
+        }
+    })
 
     socket.on('rate_realization', async (data) => {
         try {
@@ -170,6 +194,34 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('answer_quiz', async (data) => {
+        try {
+            const { userId, quizId, parcours, influence } = data;
+            const user = await User.findOne({ token: userId });
+
+            if (!user) {
+                socket.emit('error', 'User not found');
+                return;
+            }
+
+            const numericInfluence = typeof influence === 'object' ? parseFloat(influence['$numberDecimal']) : parseFloat(influence);
+
+            if (!['crea', 'com', 'dev'].includes(parcours) || isNaN(numericInfluence)) {
+                socket.emit('error', 'Invalid data for answering quiz');
+                return;
+            }
+
+            user.preferences[parcours] += numericInfluence;
+            await user.save();
+
+            socket.emit('preferences_updated', { preferences: user.preferences });
+
+        } catch (error) {
+            console.error('Error answering quiz:', error);
+            socket.emit('error', 'Error answering quiz');
+        }
+    });
+
     socket.on('ask_question', async (data) => {
         try {
             const { userId, realizationId, question } = data;
@@ -181,11 +233,19 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const answer = realization.questions.find(q => q.question === question)?.answer;
-            if (!answer) {
-                socket.emit('error', 'Question not found');
-                return;
-            }
+            // update user preferences bases on realization scores
+            const { crea, com, dev } = realization.scores;
+            const total = crea + com + dev;
+            const influence = 1
+
+            // Apply the scores based on the action
+            user.preferences.crea += (crea / total) * influence;
+            user.preferences.com += (com / total) * influence;
+            user.preferences.dev += (dev / total) * influence;
+
+            await user.save();
+
+            socket.emit('preferences_updated', { preferences: user.preferences });
 
         } catch (error) {
             console.error('Error asking question:', error);
@@ -243,6 +303,39 @@ app.post('/realizations', upload.fields([{ name: 'firstImage' }, { name: 'images
     } catch (error) {
         console.error('Failed to add realization:', error);
         res.status(500).json({ message: 'Failed to add realization' });
+    }
+});
+
+app.get('/quizzes', async (req, res) => {
+    try {
+        const quizzes = await Quiz.find({});
+        res.json(quizzes);
+    } catch (error) {
+        console.error('Failed to fetch quizzes:', error);
+        res.status(500).json({ message: 'Failed to fetch quizzes' });
+    }
+});
+
+app.post('/quizzes', async (req, res) => {
+    try {
+        const { question, parcours, answers } = req.body;
+
+        if (!question || !parcours || !answers || !answers.length) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        const newQuiz = new Quiz({
+            question,
+            parcours,
+            answers
+        });
+
+        await newQuiz.save();
+
+        res.status(201).json({ message: 'Quiz added successfully', quiz: newQuiz });
+    } catch (error) {
+        console.error('Error adding new quiz:', error);
+        res.status(500).json({ message: 'Failed to add new quiz' });
     }
 });
 

@@ -449,6 +449,32 @@ margin-left: auto;
   }
 }
 
+.answer input{
+  display: none;
+}
+.quiz-answers{
+  justify-content: space-evenly;
+  cursor: default;
+}
+.quiz-answers .answer{
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  background-color: white;
+  color: #1a1a1a;
+  padding: 1rem 0.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.quiz-answers .answer:hover{
+  background-color: #cbcbcb;
+}
+
+.quiz-card h2{
+  color: black;
+  text-align: center;
+}
 .o0-5{
   opacity: 0.5;
 }
