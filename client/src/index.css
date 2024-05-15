@@ -125,6 +125,12 @@ button:focus-visible {
   border-top-right-radius: 8px;
   z-index: 1;
 }
+.realization-info button{
+  transition: background-color 0.2s;
+}
+.realization-info button:hover{
+  background-color: #803039;
+}
 .realization-card div.shadow{
     position: absolute;
     bottom: 0;
