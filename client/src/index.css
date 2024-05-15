@@ -634,7 +634,7 @@ transform: translateY(-50%);
 }
 
 .startingScreen img {
-  width: 80%;
+  width: 50%;
   max-width: 20rem;
   /* Animation to pulse and then slide down */
   animation: pulse 0.8s ease-in-out 2,
