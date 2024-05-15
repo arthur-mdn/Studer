@@ -5,7 +5,7 @@ function QuizCard({ quiz, onAnswer }) {
     const scoreLabels = {
         dev: "Développement",
         com: "Communication",
-        crea: "Création"
+        crea: "Création Numérique"
     };
 
     return (

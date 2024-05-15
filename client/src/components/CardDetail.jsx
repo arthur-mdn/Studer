@@ -11,7 +11,7 @@ function CardDetail({ realization, onBack, onOpenChat, onRate}) {
     const scoreLabels = {
         dev: "Développement",
         com: "Communication",
-        crea: "Création"
+        crea: "Création Numérique"
     };
 
     function renderIcons(type, value, total = 5) {

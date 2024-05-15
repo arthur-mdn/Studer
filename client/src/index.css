@@ -15,6 +15,9 @@
 h1, h2, h3, h4, h5, h6, p {
   margin: 0;
 }
+body{
+  background-color: #FBF0F1;
+}
 *{
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -56,6 +59,12 @@ h1 {
 }
 .g1{
   gap: 1rem;
+}
+.g2{
+    gap: 2rem;
+}
+.g3{
+    gap: 3rem;
 }
 button {
   border-radius: 8px;
@@ -300,6 +309,13 @@ input[type=text], input[type=number], input[type=url], input[type=email], input[
   width: 50px;
   height: 50px;
   border-radius: 50%;
+}
+.ws-nw {
+    white-space: nowrap;
+}
+
+.fw-w{
+    flex-wrap: wrap;
 }
 .title{
   font-size: 1rem;
@@ -556,6 +572,44 @@ margin-left: auto;
   right: 1rem;
 }
 
+
+.results {
+  font-family: Arial, sans-serif;
+  margin: 10px;
+}
+
+.preference {
+  margin-bottom: 10px;
+}
+
+.progress-bar-container {
+  background-color: #e0e0e0;
+  border-radius: 5rem;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.progress-bar {
+  height: 20px;
+  border-radius: 5rem;
+  transition: width 0.5s ease-in-out;
+}
+
+.results{
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  position: relative;
+  padding-top: 4rem;
+}
+.results img{
+  position: absolute;
+    top: 0;
+transform: translateY(-50%);
+}
+.status.results-container{
+
+}
 @media (max-width: 1300px) {
   .realization-details .slider{
     width: 100%;

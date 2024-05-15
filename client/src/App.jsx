@@ -11,6 +11,7 @@ import { FaMessage } from "react-icons/fa6";
 import {useModal} from "./components/Modale/ModaleContext";
 import QuizCard from "./components/QuizCard.jsx";
 import QuizActions from "./components/QuizActions.jsx";
+import Results from "./components/Results.jsx";
 
 function App() {
     const [socket, setSocket] = useState(null);
@@ -102,7 +103,6 @@ function App() {
         });
 
         newSocket.on('updated_finishAtActionsCount', ({ finishAtActionsCount }) => {
-            console.log("updated_finishAtActionsCount", finishAtActionsCount);
             setShowResults(false);
         })
         newSocket.on('disconnect', () => setStatus('disconnected'));
@@ -129,12 +129,9 @@ function App() {
         const scoreLabels = {
             dev: "Développement",
             com: "Communication",
-            crea: "Création"
+            crea: "Création Numérique"
         };
-        if (showResults) {
-            //console log preferences
-            console.log("preferences", userConfig?.preferences);
-            // display preference with the highest value
+        if (showResults && view !== "final" && view !== "step2") {
             let max = Math.max(...Object.values(userConfig?.preferences));
             let parcours = scoreLabels[Object.keys(userConfig?.preferences).find(key => userConfig?.preferences[key] === max)];
 
@@ -142,8 +139,8 @@ function App() {
                 boutonClose: false,
                 titre: "Félicitations !",
                 htmlContent: `
-                <div class="fr g0-25 ai-c ">Selon moi, le parcours <p style="color: #C83E4D;margin: 0;font-weight: bold">${parcours}</p> a l'air de t'intéresser !</div>
-                <br>
+                <div class="fr g0-25 ai-c ws-nw fw-w">Selon moi, le parcours <p style="color: #C83E4D;margin: 0;font-weight: bold">${parcours}</p> a l'air de t'intéresser !</div>
+                <br> 
                 <div class="fc jc-c">
                     <p style="margin:0">C’est à ton tour de tenter de le séduire avec l’épreuve de séduction. Pour trouver ton match parfait, tu vas te retrouver face à des choix. Il n’y a pas de bonnes ou mauvaises réponses.</p>
                     <p style="margin:0">Mais fais attention à ton ennemi juré : le temps.</p>
@@ -380,12 +377,13 @@ function App() {
             case 'step2':
                 return <>
                     <div className="status">Step 2</div>
+                    <button onClick={() => setView('final')}>Results</button>
                 </>;
                 break;
             case 'final':
                 return <>
                     {/*<Results preferences={userConfig?.preferences} />*/}
-                    final results
+                    <Results userPreferences={userConfig?.preferences}/>
                 </>;
                 break;
             default:
@@ -405,7 +403,7 @@ function App() {
             case 'ready':
                 return (
                     <>
-                        {view !== "final" && (
+                        {(view !== "final" && view !== "step2") ? (
                             <>
                                 <div className={"mobile-menu display-mobile"}>
                                     <button onClick={toggleChat}>
@@ -414,15 +412,18 @@ function App() {
                                 </div>
                                 <ChatList isOpen={isChatOpen} toggleChat={toggleChat} chatHistory={chatHistory}
                                           onOpenChatDetail={handleOpenChatDetail}/>
-                    </>
-                        )}
-                        <div className="status realizations">
+                                <div className="status realizations">
+                                    {renderRealizations()}
+                                </div>
+                            </>
+                        ) : <div className="status results-container w100 h100 fc ai-c jc-c">
                             {renderRealizations()}
-                        </div>
+                        </div>}
+
                     </>
                 );
-            case 'disconnected':
-                return <div className="status">Disconnected. Attempting to reconnect...</div>;
+                                                    case 'disconnected':
+                                                        return <div className="status">Disconnected. Attempting to reconnect...</div>;
             case 'connection_failed':
                 return (
                     <div className="status">
