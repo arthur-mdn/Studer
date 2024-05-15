@@ -204,6 +204,8 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            user.seenQuizzes.push(quizId);
+
             const numericInfluence = typeof influence === 'object' ? parseFloat(influence['$numberDecimal']) : parseFloat(influence);
 
             if (!['crea', 'com', 'dev'].includes(parcours) || isNaN(numericInfluence)) {

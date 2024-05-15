@@ -35,7 +35,7 @@ function ChatList({ isOpen, toggleChat, chatHistory, onOpenChatDetail }) {
                         boutonClose: true,
                         titre: "Bienvenue sur Studer.",
                         htmlContent:
-                            `Le site pour matcher avec ton avenir ! 
+                            `<div class="fr g0-25 ai-c">Le site pour <p style="margin:0;color: #C83E4D">matcher avec ton avenir !</p> </div>
                 <br>
                 À travers de merveilleuses réalisations, trois parcours MMI vont chercher à te séduire..
                 <br>
