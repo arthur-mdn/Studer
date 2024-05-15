@@ -12,6 +12,12 @@ const Modale = () => {
         }
         closeModal();
     };
+    const handleCancel = () => {
+        if (modalProps.onCancel) {
+            modalProps.onCancel();
+        }
+        closeModal();
+    }
 
     const modalVariants = {
         hidden: {
@@ -63,16 +69,17 @@ const Modale = () => {
                             )}
                         </div>
                         <div className="modale-footer">
-                            {modalProps.cancelButton && (
-                                <button onClick={closeModal} className="modale-action-button">
-                                    Annuler
+                            {(modalProps.onCancel && (
+                                <button onClick={handleCancel} className="modale-cancel-button">
+                                    Continuer à Swiper
                                 </button>
-                            )}
+                            ))}
                             {modalProps.onValidate && (
                                 <button onClick={handleConfirm} className="modale-action-button">
                                     {modalProps.texteBoutonAction}
                                 </button>
                             )}
+
                         </div>
                     </motion.div>
                 </motion.div>

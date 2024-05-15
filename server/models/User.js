@@ -18,7 +18,15 @@ const userSchema = new Schema({
             question: String,
             askedAt: { type: Date, default: Date.now }
         }]
-    }]
+    }],
+    finished: {
+        type: Boolean,
+        default: false
+    },
+    finishAtActionsCount: {
+        type: Number,
+        default: 4
+    }
 });
 
 module.exports = mongoose.model('User', userSchema);

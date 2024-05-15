@@ -20,7 +20,7 @@ function App() {
     const [userConfig, setUserConfig] = useState(null);
     const [realizations, setRealizations] = useState([]);
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [view, setView] = useState('list'); // 'list', 'detail', 'chatDetail'
+    const [view, setView] = useState('list'); // 'list', 'detail', 'chatDetail', 'quiz', 'results'
     const [selectedRealization, setSelectedRealization] = useState(null);
     const [chatHistory, setChatHistory] = useState(() => {
         const localData = localStorage.getItem('chatHistory');
@@ -43,6 +43,7 @@ function App() {
     const [quizzes, setQuizzes] = useState([]);
     const [selectedQuiz, setSelectedQuiz] = useState(null);
     const [realizationCount, setRealizationCount] = useState(0);
+    const [showResults, setShowResults] = useState(false);
 
     useEffect(() => {
         const newSocket = io(config.serverUrl, {
@@ -77,6 +78,15 @@ function App() {
             setStatus('ready');
             newSocket.emit('request_realizations', { userId: config.token });
             newSocket.emit('request_quizzes', { userId: config.token });
+            if(config.finished){
+                setShowResults(true);
+            }else{
+                setShowResults(false);
+            }
+        });
+
+        newSocket.on('results', (status) => {
+            setShowResults(status.status)
         });
 
         newSocket.on('realizations', (newRealizations) => {
@@ -91,6 +101,10 @@ function App() {
             setUserConfig(config => ({ ...config, preferences }));
         });
 
+        newSocket.on('updated_finishAtActionsCount', ({ finishAtActionsCount }) => {
+            console.log("updated_finishAtActionsCount", finishAtActionsCount);
+            setShowResults(false);
+        })
         newSocket.on('disconnect', () => setStatus('disconnected'));
 
         newSocket.on('connect_error', (err) => {
@@ -110,6 +124,32 @@ function App() {
     useEffect(() => {
         localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
     }, [chatHistory]);
+
+    useEffect(() => {
+
+        if (showResults) {
+            newModal({
+                boutonClose: true,
+                titre: "Félicitations !",
+                htmlContent: `
+                <div class="fr g0-25 ai-c">Selon moi le parcours a l'air de t'intéresser le plus !</div>
+                <br>
+                <div class="fc ai-c jc-c">
+                    <p style="margin:0">C’est à ton tour de tenter de le séduire avec l’épreuve de séduction. Pour trouver ton match parfait, tu vas te retrouver face à des choix. Il n’y a pas de bonnes ou mauvaises réponses.</p>
+                    <p style="margin:0">Mais fais attention à ton ennemi juré : le temps. Chaque question est timée.</p>
+                </div>`,
+                texteBoutonAction: "Séduire mon parcours",
+                onValidate: () => {
+                    setView('step2');
+                },
+                onCancel: () => {
+                    setShowResults(false);
+                    socket.emit('continue_swipe', { userId: localStorage.getItem('userToken') });
+                }
+            });
+        }
+    }, [showResults]);
+
 
     useEffect(() => {
         // Show the welcome modal only if it hasn't been dismissed by the user
@@ -327,13 +367,27 @@ function App() {
                     );
                 }
                 break;
+            case 'step2':
+                return <>
+                    <div className="status">Step 2</div>
+                </>;
+                break;
+            case 'final':
+                return <>
+                    {/*<Results preferences={userConfig?.preferences} />*/}
+                    final results
+                </>;
+                break;
             default:
-                return <div className="status">No more realizations to rate.</div>;
+                return <>
+                    <div className="status">Aucune réalisation restante</div>
+                </>;
+
         }
     };
 
-    const renderContent = () => {
-        switch (status) {
+                const renderContent = () => {
+                                                switch (status) {
             case 'connecting':
                 return <div className="status">Connecting to server...</div>;
             case 'requesting_code':
@@ -341,12 +395,17 @@ function App() {
             case 'ready':
                 return (
                     <>
-                        <div className={"mobile-menu display-mobile"}>
-                            <button onClick={toggleChat}>
-                                <FaMessage/>
-                            </button>
-                        </div>
-                        <ChatList isOpen={isChatOpen} toggleChat={toggleChat} chatHistory={chatHistory} onOpenChatDetail={handleOpenChatDetail} />
+                        {view !== "final" && (
+                            <>
+                                <div className={"mobile-menu display-mobile"}>
+                                    <button onClick={toggleChat}>
+                                        <FaMessage/>
+                                    </button>
+                                </div>
+                                <ChatList isOpen={isChatOpen} toggleChat={toggleChat} chatHistory={chatHistory}
+                                          onOpenChatDetail={handleOpenChatDetail}/>
+                    </>
+                        )}
                         <div className="status realizations">
                             {renderRealizations()}
                         </div>
@@ -380,6 +439,9 @@ function App() {
                 {JSON.stringify(userConfig?.preferences)}
                 Reset
             </button>
+            {/*<button id={"ask-results-via-socket"} onClick={() => {*/}
+            {/*    socket.emit('ask_results', { userId: localStorage.getItem('userToken') });*/}
+            {/*} }>results{showResults ? "Y" : "N"}</button>*/}
             {renderContent()}
         </div>
     );

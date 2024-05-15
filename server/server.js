@@ -179,7 +179,15 @@ io.on('connection', (socket) => {
             user.preferences.com += (com / total) * influence;
             user.preferences.dev += (dev / total) * influence;
 
-            await user.save();
+            const totalActionsMade = user.seenRealizations.length + user.seenQuizzes.length;
+            if(totalActionsMade >= user.finishAtActionsCount){
+                user.finished = true;
+                await user.save();
+                socket.emit('results', { status: user.finished })
+            } else{
+                user.finished = false;
+                await user.save();
+            }
 
             // Fetch new realizations to send back to the user
             const newRealizations = await getRandomRealizations(user, 1);
@@ -214,8 +222,16 @@ io.on('connection', (socket) => {
             }
 
             user.preferences[parcours] += numericInfluence;
-            await user.save();
 
+            const totalActionsMade = user.seenRealizations.length + user.seenQuizzes.length;
+            if(totalActionsMade >= user.finishAtActionsCount){
+                user.finished = true;
+                await user.save();
+                socket.emit('results', { status: user.finished })
+            } else{
+                user.finished = false;
+                await user.save();
+            }
             socket.emit('preferences_updated', { preferences: user.preferences });
 
         } catch (error) {
@@ -270,6 +286,62 @@ io.on('connection', (socket) => {
         } catch (error) {
             console.error('Error asking question:', error);
             socket.emit('error', 'Error asking question');
+        }
+    })
+
+    socket.on('ask_results', async (data) => {
+        try {
+            console.log('ask_results:', data)
+            const { userId } = data;
+            const user = await User.findOne({ token: userId });
+
+            if (!user) {
+                socket.emit('error', 'User not found');
+                return;
+            }
+            if(user.finished) {
+                user.finished = false;
+            }else{
+                user.finished = true;
+            }
+            await user.save();
+
+            socket.emit('results', { status: user.finished });
+        } catch (error) {
+            console.error('Error asking results:', error);
+            socket.emit('error', 'Error asking results');
+        }
+    });
+
+    socket.on('continue_swipe', async (data) => {
+        try {
+            const { userId } = data;
+            const user = await User.findOne({ token: userId });
+
+            if (!user) {
+                socket.emit('error', 'User not found');
+                return;
+            }
+
+            // const totalActionsMade = user.seenRealizations.length + user.seenQuizzes.length;
+            //
+            // if(totalActionsMade >= user.finishAtActionsCount){
+            //     user.finished = true;
+            //     await user.save();
+            // } else{
+            //     user.finished = false;
+            //     await user.save();
+            // }
+
+            // add 4 to finishAtActionsCount
+            user.finishAtActionsCount += 4;
+            user.finished = false;
+            await user.save();
+            socket.emit('updated_finishAtActionsCount', { finishAtActionsCount: user.finishAtActionsCount });
+
+        } catch (error) {
+            console.error('Error asking results:', error);
+            socket.emit('error', 'Error asking results');
         }
     })
 
