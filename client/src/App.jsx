@@ -48,9 +48,17 @@ function App() {
 
     useEffect(() => {
         setTimeout(() => {
-            document.querySelector(".startingScreen").style.display = "none";
+            const startingScreen = document.querySelector(".startingScreen");
+            startingScreen.style.transition = 'opacity 0.5s ease-out';
+            startingScreen.style.opacity = '0';
+
+            setTimeout(() => {
+                startingScreen.style.display = "none";
+            }, 1000);
         }, 2000);
     }, []);
+
+
     useEffect(() => {
         const newSocket = io(config.serverUrl, {
             reconnectionAttempts: 5,
