@@ -25,7 +25,7 @@ const userSchema = new Schema({
     },
     finishAtActionsCount: {
         type: Number,
-        default: 4
+        default: 6
     }
 });
 
