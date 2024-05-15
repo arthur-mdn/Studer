@@ -3,11 +3,10 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import config from "../config.js";
-import {FaComment, FaX} from "react-icons/fa6";
+import { FaComment, FaX } from "react-icons/fa6";
 import CardActions from "./CardActions.jsx";
 
-
-function CardDetail({ realization, onBack, onOpenChat, onRate}) {
+function CardDetail({ realization, onBack, onOpenChat, onRate, swipe }) {
     const scoreLabels = {
         dev: "Développement",
         com: "Communication",
@@ -48,10 +47,15 @@ function CardDetail({ realization, onBack, onOpenChat, onRate}) {
         cssEase: "linear"
     };
 
+    const handleSwipe = (direction) => {
+        swipe(direction);
+        onBack();
+    };
+
     return (
         <div className="realization-details">
-            <button className="back-button" style={{position: "absolute"}} onClick={onBack}>
-                <FaX/>
+            <button className="back-button" style={{ position: "absolute" }} onClick={onBack}>
+                <FaX />
             </button>
             <div className="slider">
                 <Slider {...settings}>
@@ -96,11 +100,11 @@ function CardDetail({ realization, onBack, onOpenChat, onRate}) {
 
                 <div className={"fc ai-c jc-c"}>
                     <h3>Tu as une question ?</h3>
-                    <button className="add-to-chat fr ai-c g0-5" onClick={onOpenChat}><FaComment/>Accéder au chat
+                    <button className="add-to-chat fr ai-c g0-5" onClick={onOpenChat}><FaComment />Accéder au chat
                     </button>
                 </div>
                 <div className={"fc ai-c jc-c"}>
-                    <CardActions onRate={onRate} />
+                    <CardActions onRate={onRate} fullyDisabled={false} swipe={handleSwipe} />
                 </div>
             </div>
         </div>

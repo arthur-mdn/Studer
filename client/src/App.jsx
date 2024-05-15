@@ -395,7 +395,7 @@ function App() {
                 }
             case 'detail':
                 if (selectedRealization) {
-                    return <CardDetail realization={selectedRealization} onBack={handleBackToList} onOpenChat={()=> handleAddToChat(selectedRealization)} onRate={handleRate}/>;
+                    return <CardDetail swipe={swipe} realization={selectedRealization} onBack={handleBackToList} onOpenChat={()=> handleAddToChat(selectedRealization)} onRate={handleRate}/>;
                 }
                 break;
             case 'chatDetail':
