@@ -37,9 +37,9 @@ function ChatDetail({ chat, onSendQuestion, onBackToList }) {
 
     return (
         <div className="chat-detail">
-            <div className={"fr g1"}>
+            <div className={"fr g1 ai-fs"}>
                 <button className="back-to-chat-list fr g0-5 ai-c" onClick={onBackToList}><FaArrowLeftLong/>Retour</button>
-                <h2>{chat.realization.title}</h2>
+                <h3>{chat.realization.title}</h3>
             </div>
             <div className={"fc g1 h100 jc-sb"}>
                 <ul className="messages">
