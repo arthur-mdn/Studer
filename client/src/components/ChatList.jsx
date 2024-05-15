@@ -1,6 +1,7 @@
 import React from 'react';
 import config from "../config.js";
 import {useModal} from "./Modale/ModaleContext.jsx";
+import {FaX} from "react-icons/fa6";
 
 function ChatList({ isOpen, toggleChat, chatHistory, onOpenChatDetail }) {
     const {newModal} = useModal();
@@ -8,7 +9,7 @@ function ChatList({ isOpen, toggleChat, chatHistory, onOpenChatDetail }) {
         <div className={`chat ${isOpen ? 'open' : ''}`}>
             <div className="title">
                 MMI Studer
-                <div className="close display-mobile" onClick={toggleChat}>X</div>
+                <button className="close display-mobile" onClick={toggleChat}><FaX/></button>
             </div>
             <div className="chat-container">
                 {Object.keys(chatHistory).map(key => (
