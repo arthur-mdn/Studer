@@ -1,0 +1,13 @@
+{
+  "name": "Studer",
+  "short_name": "Studer",
+  "start_url": "https://studer.mondon.pro/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/elements/logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
