@@ -222,6 +222,24 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('skip_quiz', async (data) => {
+        try {
+            const { userId, quizId } = data;
+            const user = await User.findOne({ token: userId });
+
+            if (!user) {
+                socket.emit('error', 'User not found');
+                return;
+            }
+
+            user.seenQuizzes.push(quizId);
+            await user.save();
+        } catch (error) {
+            console.error('Error skipping quiz:', error);
+            socket.emit('error', 'Error skipping quiz');
+        }
+    })
+
     socket.on('ask_question', async (data) => {
         try {
             const { userId, realizationId, question } = data;

@@ -232,6 +232,12 @@ button:focus-visible {
 }
 .superlike{
 }
+.dislike:disabled, .like:disabled, .superlike:disabled{
+  background-color: #969595;
+}
+.dislike:disabled img, .like:disabled img, .superlike:disabled img{
+  opacity: 0.5;
+}
 
 #reset{
   position: absolute;

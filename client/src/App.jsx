@@ -10,6 +10,7 @@ import ChatDetail from "./components/ChatDetail.jsx";
 import { FaMessage } from "react-icons/fa6";
 import {useModal} from "./components/Modale/ModaleContext";
 import QuizCard from "./components/QuizCard.jsx";
+import QuizActions from "./components/QuizActions.jsx";
 
 function App() {
     const [socket, setSocket] = useState(null);
@@ -276,6 +277,19 @@ function App() {
         }
     };
 
+    const handleQuizSkip = () => {
+        if (selectedQuiz && socket) {
+            socket.emit('skip_quiz', {
+                userId: localStorage.getItem('userToken'),
+                quizId: selectedQuiz._id,
+                parcours: selectedQuiz.parcours
+            });
+            socket.emit('request_quizzes', { userId: localStorage.getItem('userToken') });
+            setSelectedQuiz(null);
+            setView('list');
+        }
+    }
+
 
     const renderRealizations = () => {
         switch (view) {
@@ -310,7 +324,10 @@ function App() {
             case 'quiz':
                 if (selectedQuiz) {
                     return (
-                        <QuizCard quiz={selectedQuiz} onAnswer={handleQuizAnswer} />
+                        <>
+                            <QuizCard quiz={selectedQuiz} onAnswer={handleQuizAnswer} />
+                            <QuizActions onAnswer={handleQuizAnswer} onSkip={handleQuizSkip} />
+                        </>
                     );
                 }
                 break;
