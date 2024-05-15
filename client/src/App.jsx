@@ -370,11 +370,17 @@ function App() {
         switch (view) {
             case 'list':
                 if (realizations.length > 0) {
-                    cardRefs.current = cardRefs.current.slice(0, realizations.length);
+                    // Only keep references for the last two cards
+                    cardRefs.current = cardRefs.current.slice(-2);
+
+                    // Determine the start index to show the last two cards
+                    const startIndex = Math.max(realizations.length - 2, 0);
+                    const cardsToShow = realizations.slice(startIndex);
+
                     return (
                         <>
                             <div className="cardContainer">
-                                {realizations.map((realization, index) => (
+                                {cardsToShow.map((realization, index) => (
                                     <Card
                                         key={realization._id + index}
                                         realization={realization}
@@ -382,12 +388,12 @@ function App() {
                                         onAddToChat={() => handleAddToChat(realization)}
                                         onRate={handleRate}
                                         swiping={swiping}
-                                        ref={el => cardRefs.current[index] = el}
-                                        index={index}
+                                        ref={el => cardRefs.current[startIndex + index] = el}
+                                        index={startIndex + index}
                                     />
                                 ))}
                             </div>
-                            <CardActions onRate={handleRate} fullyDisabled={swiping} swipe={swipe}/>
+                            <CardActions onRate={handleRate} fullyDisabled={swiping} swipe={swipe} />
                         </>
                     );
                 } else {
