@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {FaArrowLeftLong} from "react-icons/fa6";
 
 function ChatDetail({ chat, onSendQuestion, onBackToList }) {
     const [askedQuestions, setAskedQuestions] = useState(new Set(chat.askedQuestions || []));
@@ -37,7 +38,7 @@ function ChatDetail({ chat, onSendQuestion, onBackToList }) {
     return (
         <div className="chat-detail">
             <div className={"fr g1"}>
-                <button className="back-to-chat-list" onClick={onBackToList}>Retour</button>
+                <button className="back-to-chat-list fr g0-5 ai-c" onClick={onBackToList}><FaArrowLeftLong/>Retour</button>
                 <h2>{chat.realization.title}</h2>
             </div>
             <div className={"fc g1 h100 jc-sb"}>

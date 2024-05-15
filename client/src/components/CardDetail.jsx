@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import config from "../config.js";
-import {FaComment} from "react-icons/fa6";
+import {FaComment, FaX} from "react-icons/fa6";
 
 
 function CardDetail({ realization, onBack, onOpenChat }) {
@@ -50,7 +50,7 @@ function CardDetail({ realization, onBack, onOpenChat }) {
     return (
         <div className="realization-details">
             <button className="back-button" style={{position: "absolute"}} onClick={onBack}>
-                Retour
+                <FaX/>
             </button>
             <div className="slider">
                 <Slider {...settings}>
