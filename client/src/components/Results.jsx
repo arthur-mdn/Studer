@@ -11,17 +11,24 @@ function Results({ userPreferences }) {
         crea: "Création Numérique"
     };
 
-    const totalScore = Object.keys(userPreferences).reduce((total, key) => total + Math.abs(userPreferences[key]), 0);
+    const minScore = Math.min(...Object.values(userPreferences));
+
+    const adjustedScores = Object.keys(userPreferences).reduce((acc, key) => {
+        acc[key] = userPreferences[key] - minScore;
+        return acc;
+    }, {});
+
+    const totalScore = Object.values(adjustedScores).reduce((total, score) => total + score, 0);
 
     const calculatePercentage = (score) => {
         return ((score / totalScore) * 100).toFixed(2);
     };
 
-    const scores = Object.keys(userPreferences).map(key => ({
+    const scores = Object.keys(adjustedScores).map(key => ({
         key,
         label: scoreLabels[key],
-        score: userPreferences[key],
-        percentage: calculatePercentage(userPreferences[key])
+        score: adjustedScores[key],
+        percentage: calculatePercentage(adjustedScores[key])
     }));
 
     scores.sort((a, b) => b.percentage - a.percentage);
