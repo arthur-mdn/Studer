@@ -610,6 +610,15 @@ transform: translateY(-50%);
 .status.results-container{
 
 }
+.contact-students img{
+  border:1px solid #C83E4D;
+  border-radius: 10rem;
+  width: 4rem;
+  height: 4rem;
+  object-fit: cover;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
 @media (max-width: 1300px) {
   .realization-details .slider{
     width: 100%;
