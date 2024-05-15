@@ -767,3 +767,16 @@ transform: translateY(-50%);
   transform: translate(-50%, -50%);
   translate: -50% -50%;
 }
+
+.placeholder-video{
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  background-color: #b9b9b9;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+}

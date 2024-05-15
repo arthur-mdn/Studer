@@ -7,7 +7,7 @@ import Card from "./components/Card.jsx";
 import CardDetail from "./components/CardDetail.jsx";
 import ChatList from "./components/ChatList.jsx";
 import ChatDetail from "./components/ChatDetail.jsx";
-import { FaMessage } from "react-icons/fa6";
+import {FaArrowLeftLong, FaArrowRightLong, FaMessage, FaPlay} from "react-icons/fa6";
 import { useModal } from "./components/Modale/ModaleContext";
 import QuizCard from "./components/QuizCard.jsx";
 import QuizActions from "./components/QuizActions.jsx";
@@ -426,10 +426,20 @@ function App() {
                 }
                 break;
             case 'step2':
-                return <>
-                    <div className="status">Step 2</div>
-                    <button onClick={() => setView('final')}>Results</button>
-                </>;
+                return <div className={"h100 fc g1 ai-c jc-c"}>
+                    <div className={"fc ai-c p1 g1"}>
+                        <h2>Étape 2</h2>
+                        <p>Il est temps de séduire le parcours qui t'intéresse !</p>
+                        <div className={"placeholder-video"}>
+                            <FaPlay/>
+                        </div>
+                        <div className={"fr g0-5"}>
+                            <button><FaArrowLeftLong/></button>
+                            <button><FaArrowRightLong/></button>
+                        </div>
+                    </div>
+                    <button onClick={() => setView('final')} style={{backgroundColor:"#C83E4D"}}>Résultats</button>
+                </div>;
                 break;
             case 'final':
                 return <>
