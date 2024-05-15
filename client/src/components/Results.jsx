@@ -110,7 +110,7 @@ function Results({ userPreferences }) {
     return (
         <div className="results fc ai-c jc-c g1">
             <img src="/elements/logo.svg" alt="logo" style={{ width: "8rem" }} />
-            <h2>Voici tes résultats:</h2>
+            <h2>Tu es compatible à :</h2>
             <div className="preferences fr g3 w100 ai-c fw-w jc-c">
                 {scores.map((score, index) => (
                     <div key={index} className="preference fc ai-c g1">
