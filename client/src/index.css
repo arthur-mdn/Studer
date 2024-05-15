@@ -367,6 +367,7 @@ input[type=text], input[type=number], input[type=url], input[type=email], input[
   display: flex;
   flex-direction: row;
     gap: 1rem;
+  overflow: scroll;
 }
 .realization-details .slider{
   width: 500px;
