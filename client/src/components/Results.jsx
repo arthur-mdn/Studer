@@ -1,23 +1,20 @@
 import React from "react";
-import {useModal} from "./Modale/ModaleContext";
-import {FaEnvelope} from "react-icons/fa6";
+import { useModal } from "./Modale/ModaleContext";
+import { FaEnvelope } from "react-icons/fa6";
 
 function Results({ userPreferences }) {
-    const {newModal} = useModal();
-
+    const { newModal } = useModal();
+    console.log(userPreferences)
     const scoreLabels = {
         dev: "Développement",
         com: "Communication",
         crea: "Création Numérique"
     };
 
-    const totalScore = Object.keys(userPreferences).reduce(
-        (total, key) => total + Math.abs(userPreferences[key]),
-        0
-    );
+    const totalScore = Object.keys(userPreferences).reduce((total, key) => total + Math.abs(userPreferences[key]), 0);
 
     const calculatePercentage = (score) => {
-        return ((Math.abs(score) / totalScore) * 100).toFixed(2);
+        return ((score / totalScore) * 100).toFixed(2);
     };
 
     const scores = Object.keys(userPreferences).map(key => ({
@@ -30,7 +27,6 @@ function Results({ userPreferences }) {
     scores.sort((a, b) => b.percentage - a.percentage);
 
     const openModal = () => {
-
         newModal({
             boutonClose: true,
             titre: "Contactez les étudiants",
@@ -114,13 +110,12 @@ function Results({ userPreferences }) {
             <div className="preferences fr g3 w100 ai-c fw-w jc-c">
                 {scores.map((score, index) => (
                     <div key={index} className="preference fc ai-c g1">
-                        <h1 style={{color:"#C83E4D"}}>{score.percentage}%</h1>
+                        <h1 style={{ color: "#C83E4D" }}>{score.percentage}%</h1>
                         <div className={"fc ai-c"}>
                             <p>Avec le parcours</p> <strong>{score.label}</strong>
-
                         </div>
                         <div className="progress-bar-container w100">
-                        <div
+                            <div
                                 className="progress-bar"
                                 style={{
                                     width: `${score.percentage}%`,
@@ -133,8 +128,8 @@ function Results({ userPreferences }) {
                     </div>
                 ))}
             </div>
-            <button className="button fr g0-5 ai-c" onClick={openModal} style={{backgroundColor:"#C83E4D"}}>
-                <FaEnvelope/>
+            <button className="button fr g0-5 ai-c" onClick={openModal} style={{ backgroundColor: "#C83E4D" }}>
+                <FaEnvelope />
                 Contacter les étudiants
             </button>
         </div>
