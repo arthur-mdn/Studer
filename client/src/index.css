@@ -219,6 +219,7 @@ button:focus-visible {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 }
 .actions button:hover {
   opacity: 0.6;
@@ -260,6 +261,7 @@ button:focus-visible {
   bottom: 0.5rem;
   right: 0.5rem;
   opacity: 0.2;
+  z-index: 2;
 }
 .mt-a{
     margin-top: auto;

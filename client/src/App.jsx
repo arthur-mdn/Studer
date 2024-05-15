@@ -492,7 +492,6 @@ function App() {
                 window.location.reload();
             }}>
                 {JSON.stringify(userConfig?.preferences)}
-                Reset
             </button>
             <div className={"startingScreen"}>
                 <img src={"/elements/logo.svg"}/>
