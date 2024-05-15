@@ -519,6 +519,22 @@ margin-left: auto;
     width: 100%;
     height: 250px;
   }
+  .results{
+    padding-top:2.5rem!important;
+  }
+  .results img{
+    width: 5rem!important;
+  }
+  .results h1{
+    font-size: 2rem;
+  }
+  .results .preferences{
+    gap: 1.5rem;
+    font-size: 0.8rem;
+  }
+  .results .preference{
+    gap: 0
+  }
 }
 /* on mobile */
 @media (max-width: 780px) {
