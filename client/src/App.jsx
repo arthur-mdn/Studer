@@ -139,7 +139,7 @@ function App() {
             let parcours = scoreLabels[Object.keys(userConfig?.preferences).find(key => userConfig?.preferences[key] === max)];
 
             newModal({
-                boutonClose: true,
+                boutonClose: false,
                 titre: "Félicitations !",
                 htmlContent: `
                 <div class="fr g0-25 ai-c ">Selon moi, le parcours <p style="color: #C83E4D;margin: 0;font-weight: bold">${parcours}</p> a l'air de t'intéresser !</div>
