@@ -179,7 +179,7 @@ function App() {
                 titre: "Bienvenue sur Studer.",
                 htmlContent:
                     `<div>
-                              Le site <span style="color: #C83E4D;">pour matcher avec ton avenir !</span>
+                              Le site <span style="color: #C83E4D;font-weight: bold">pour matcher avec ton avenir !</span>
                             </div>
                 <br>
                 À travers de merveilleuses réalisations, trois parcours MMI vont chercher à te séduire..

@@ -508,6 +508,10 @@ margin-left: auto;
   display: none;
 }
 
+button:disabled{
+  background-color: #969595;
+  cursor: not-allowed;
+}
 
 .text-container {
   display: flex; /* Keeps text inline and allows wrapping */

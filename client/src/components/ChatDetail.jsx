@@ -61,7 +61,7 @@ function ChatDetail({ chat, onSendQuestion, onBackToList }) {
                 <div className="question-buttons">
                     {chat.realization.questions.map((q, index) => (
                         !askedQuestions.has(q.question) && (
-                            <button key={index} onClick={() => sendQuestion(q.question)}>
+                            <button key={index} onClick={() => sendQuestion(q.question)} disabled={isBotTyping}>
                                 {q.question}
                             </button>
                         )
