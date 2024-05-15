@@ -4,9 +4,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import config from "../config.js";
 import {FaComment, FaX} from "react-icons/fa6";
+import CardActions from "./CardActions.jsx";
 
 
-function CardDetail({ realization, onBack, onOpenChat }) {
+function CardDetail({ realization, onBack, onOpenChat, onRate}) {
     const scoreLabels = {
         dev: "Développement",
         com: "Communication",
@@ -57,21 +58,25 @@ function CardDetail({ realization, onBack, onOpenChat }) {
                     {images}
                 </Slider>
             </div>
-            <div className="fc g0-5 w100">
-                <h2>{realization.title}</h2>
-                <div className="fr g0-5">
-                    {Object.entries(realization.scores)
-                        .filter(([key, value]) => value > 0)
-                        .sort((a, b) => b[1] - a[1])
-                        .map(([key, value]) => (
-                            <div key={key} className="tag">
-                                <span>{scoreLabels[key] || key}</span>
-                            </div>
-                        ))
-                    }
+            <div className="fc g0-5 w100 h100 jc-sb">
+                <div>
+                    <h2>{realization.title}</h2>
+                    <div className="fr g0-5">
+                        {Object.entries(realization.scores)
+                            .filter(([key, value]) => value > 0)
+                            .sort((a, b) => b[1] - a[1])
+                            .map(([key, value]) => (
+                                <div key={key} className="tag">
+                                    <span>{scoreLabels[key] || key}</span>
+                                </div>
+                            ))
+                        }
+                    </div>
                 </div>
-                <h3>Description et contexte du projet</h3>
-                <p>{realization.description}</p>
+                <div>
+                    <h3>Description et contexte du projet</h3>
+                    <p>{realization.description}</p>
+                </div>
                 <div className="fc g1">
                     <div className="project-detail-item">
                         <h4>Type de projet : </h4> {realization.type}
@@ -93,6 +98,9 @@ function CardDetail({ realization, onBack, onOpenChat }) {
                     <h3>Tu as une question ?</h3>
                     <button className="add-to-chat fr ai-c g0-5" onClick={onOpenChat}><FaComment/>Accéder au chat
                     </button>
+                </div>
+                <div className={"fc ai-c jc-c"}>
+                    <CardActions onRate={onRate} />
                 </div>
             </div>
         </div>

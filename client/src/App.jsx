@@ -175,6 +175,8 @@ function App() {
             if ((realizationCount + 1) % 3 === 0 && quizzes.length > 0) {
                 setSelectedQuiz(quizzes.shift());
                 setView('quiz');
+            }else{
+                setView('list');
             }
         }
     };
@@ -307,7 +309,7 @@ function App() {
                 }
             case 'detail':
                 if (selectedRealization) {
-                    return <CardDetail realization={selectedRealization} onBack={handleBackToList} onOpenChat={()=> handleAddToChat(selectedRealization)} />;
+                    return <CardDetail realization={selectedRealization} onBack={handleBackToList} onOpenChat={()=> handleAddToChat(selectedRealization)} onRate={handleRate}/>;
                 }
                 break;
             case 'chatDetail':
