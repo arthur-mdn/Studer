@@ -540,6 +540,12 @@ margin-left: auto;
     width: 100%;
     height: 250px;
   }
+  .modale-container{
+    margin: 2rem
+  }
+  .mouse-indicator{
+    scale: 0.7;
+  }
 }
 
 .title{
