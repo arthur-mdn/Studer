@@ -757,6 +757,7 @@ transform: translateY(-50%);
   height: 100%;
 }
 .realization-card.realization-only{
+  user-select: none;
   position: absolute;
   top: 50%;
   left: 50%;
