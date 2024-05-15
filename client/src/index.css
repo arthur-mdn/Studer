@@ -235,6 +235,7 @@ button:focus-visible {
   background-color: white;
   width: 4rem;
   height: 4rem;
+  transition: background-color 0.2s;
 }
 .nope {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -247,7 +248,7 @@ button:focus-visible {
 }
 .superlike{
 }
-.dislike:disabled, .like:disabled, .superlike:disabled{
+.dislike:disabled, .like:disabled, .superlike:disabled, .nope:disabled{
   background-color: #969595;
 }
 .dislike:disabled img, .like:disabled img, .superlike:disabled img{
@@ -630,6 +631,9 @@ button:disabled{
 
 .quiz-answers .answer:hover{
   background-color: #cbcbcb;
+}
+.card-content{
+  height: 100%;
 }
 .quiz-card{
   display: flex;

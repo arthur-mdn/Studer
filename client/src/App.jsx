@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
 import config from './config';
 import './App.css';
@@ -46,6 +46,9 @@ function App() {
     const [realizationCount, setRealizationCount] = useState(0);
     const [showResults, setShowResults] = useState(false);
     const [swiping, setSwiping] = useState(false);
+
+    // Array of references for TinderCards
+    const cardRefs = useRef([]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -353,16 +356,21 @@ function App() {
         }
     }
 
-
-    //useeffect on realizations
-    useEffect(() => {
-        console.log("realizations", realizations);
-    }, [realizations]);
+    const swipe = (direction) => {
+        const cards = cardRefs.current;
+        if (cards.length > 0) {
+            const card = cards[realizations.length - 1];
+            if (card) {
+                card.swipe(direction);
+            }
+        }
+    };
 
     const renderRealizations = () => {
         switch (view) {
             case 'list':
                 if (realizations.length > 0) {
+                    cardRefs.current = cardRefs.current.slice(0, realizations.length);
                     return (
                         <>
                             <div className="cardContainer">
@@ -374,11 +382,12 @@ function App() {
                                         onAddToChat={() => handleAddToChat(realization)}
                                         onRate={handleRate}
                                         swiping={swiping}
+                                        ref={el => cardRefs.current[index] = el}
                                         index={index}
                                     />
                                 ))}
                             </div>
-                            <CardActions onRate={handleRate} fullyDisabled={swiping}/>
+                            <CardActions onRate={handleRate} fullyDisabled={swiping} swipe={swipe}/>
                         </>
                     );
                 } else {
