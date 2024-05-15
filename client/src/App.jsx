@@ -126,19 +126,29 @@ function App() {
     }, [chatHistory]);
 
     useEffect(() => {
-
+        const scoreLabels = {
+            dev: "Développement",
+            com: "Communication",
+            crea: "Création"
+        };
         if (showResults) {
+            //console log preferences
+            console.log("preferences", userConfig?.preferences);
+            // display preference with the highest value
+            let max = Math.max(...Object.values(userConfig?.preferences));
+            let parcours = scoreLabels[Object.keys(userConfig?.preferences).find(key => userConfig?.preferences[key] === max)];
+
             newModal({
                 boutonClose: true,
                 titre: "Félicitations !",
                 htmlContent: `
-                <div class="fr g0-25 ai-c">Selon moi le parcours a l'air de t'intéresser le plus !</div>
+                <div class="fr g0-25 ai-c ">Selon moi, le parcours <p style="color: #C83E4D;margin: 0;font-weight: bold">${parcours}</p> a l'air de t'intéresser !</div>
                 <br>
-                <div class="fc ai-c jc-c">
+                <div class="fc jc-c">
                     <p style="margin:0">C’est à ton tour de tenter de le séduire avec l’épreuve de séduction. Pour trouver ton match parfait, tu vas te retrouver face à des choix. Il n’y a pas de bonnes ou mauvaises réponses.</p>
-                    <p style="margin:0">Mais fais attention à ton ennemi juré : le temps. Chaque question est timée.</p>
+                    <p style="margin:0">Mais fais attention à ton ennemi juré : le temps.</p>
                 </div>`,
-                texteBoutonAction: "Séduire mon parcours",
+                texteBoutonAction: "Séduire ce parcours",
                 onValidate: () => {
                     setView('step2');
                 },
