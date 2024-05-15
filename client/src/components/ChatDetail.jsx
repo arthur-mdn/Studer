@@ -26,7 +26,7 @@ function ChatDetail({ chat, onSendQuestion, onBackToList }) {
                 setTimeout(() => {
                     setMessages([...messages, { text: questionText, from: 'user' }, { text: findAnswerForQuestion(questionText), from: 'bot' }]);
                 }, 1);
-            }, 3000);
+            }, 1500);
         }
     };
 
