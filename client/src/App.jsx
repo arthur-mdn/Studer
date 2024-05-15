@@ -47,6 +47,11 @@ function App() {
     const [showResults, setShowResults] = useState(false);
 
     useEffect(() => {
+        setTimeout(() => {
+            document.querySelector(".startingScreen").style.display = "none";
+        }, 2000);
+    }, []);
+    useEffect(() => {
         const newSocket = io(config.serverUrl, {
             reconnectionAttempts: 5,
             reconnectionDelay: 1000,
@@ -441,6 +446,7 @@ function App() {
         }
     };
 
+
     return (
         <div className="App">
             <button id={"reset"} onClick={() => {
@@ -453,6 +459,9 @@ function App() {
             {/*<button id={"ask-results-via-socket"} onClick={() => {*/}
             {/*    socket.emit('ask_results', { userId: localStorage.getItem('userToken') });*/}
             {/*} }>results{showResults ? "Y" : "N"}</button>*/}
+            <div className={"startingScreen"}>
+                <img src={"/elements/logo.svg"}/>
+            </div>
             {renderContent()}
         </div>
     );

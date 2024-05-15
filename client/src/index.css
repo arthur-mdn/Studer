@@ -619,12 +619,52 @@ transform: translateY(-50%);
   flex-grow: 0;
   flex-shrink: 0;
 }
-@media (max-width: 1300px) {
-  .realization-details .slider{
-    width: 100%;
-    height: 300px;
+.startingScreen {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: #C83E4D;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* Set initial opacity to 1 */
+  opacity: 1;
+}
+
+.startingScreen img {
+  width: 80%;
+  max-width: 20rem;
+  /* Animation to pulse and then slide down */
+  animation: pulse 0.8s ease-in-out 2,
+  slideDown 1s ease-out 1.6s;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
   }
-  .realization-details{
-    flex-direction: column;
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    transform: translateY(130vh) scale(0.5) rotate(90deg);
+  }
+}
+
+/* Additional keyframes for fading out the screen */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
