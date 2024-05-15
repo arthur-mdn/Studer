@@ -507,6 +507,10 @@ margin-left: auto;
 .display-mobile{
   display: none;
 }
+.back-to-chat-list{
+  z-index: 6;
+  padding: 0.7em 1.2em;
+}
 
 button:disabled{
   background-color: #969595;
@@ -572,7 +576,7 @@ button:disabled{
     position: fixed;
     bottom: 0;
     top:0;
-    z-index: 4;
+    z-index: 7;
     display: none;
   }
   .chat.open{
