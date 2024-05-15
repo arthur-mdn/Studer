@@ -8,9 +8,11 @@ import CardDetail from "./components/CardDetail.jsx";
 import ChatList from "./components/ChatList.jsx";
 import ChatDetail from "./components/ChatDetail.jsx";
 import { FaMessage } from "react-icons/fa6";
+import {useModal} from "./components/Modale/ModaleContext";
 
 function App() {
     const [socket, setSocket] = useState(null);
+    const {newModal} = useModal();
     const [status, setStatus] = useState('connecting');
     const [error, setError] = useState(null);
     const [userConfig, setUserConfig] = useState(null);
@@ -96,6 +98,55 @@ function App() {
     useEffect(() => {
         localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
     }, [chatHistory]);
+
+    useEffect(() => {
+        // Show the welcome modal only if it hasn't been dismissed by the user
+        if (!localStorage.getItem('welcomeModalShown')) {
+            newModal({
+                boutonClose: true,
+                titre: "Bienvenue sur Studer.",
+                htmlContent:
+                    `Le site pour matcher avec ton avenir ! 
+                <br>
+                À travers de merveilleuses réalisations, trois parcours MMI vont chercher à te séduire..
+                <br>
+                Lorsque tu croises une carte projet, plusieurs choix s'offrent à toi
+                <br>
+                <div class="actions fc ai-fs">
+                <div class="fr g1 ai-c jc-s">
+                    <button class="nope">
+                        <img src="/elements/actions/neutre.svg"/>
+                    </button>
+                    Tu es mitigé, reste neutre.
+                </div>
+                <div class="fr g1 ai-c jc-s">
+                    <button class="dislike">
+                        <img src="/elements/actions/dislike.svg"/>
+                    </button>
+                    Tu n'aimes pas du tout.
+                </div>
+                <div class="fr g1 ai-c jc-s">
+                    <button class="like">
+                        <img src="/elements/actions/like.svg"/>
+                    </button>
+                    Tu aimes bien le projet.
+                </div>
+                <div class="fr g1 ai-c jc-s">
+                    <button class="superlike">
+                        <img src="/elements/actions/extralike.svg"/>
+                    </button>
+                    Tu adores le projet !
+                </div>
+            </div>            `,
+                texteBoutonAction: "Trouver mon match parfait",
+                onValidate: () => {
+                    console.log("Utilisateur a accepté");
+                    localStorage.setItem('welcomeModalShown', 'true');
+                },
+            });
+        }
+    }, []);
+
 
     const handleRate = (action) => {
         if (realizations.length > 0 && socket) {

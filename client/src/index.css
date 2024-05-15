@@ -326,6 +326,9 @@ input[type=text], input[type=number], input[type=url], input[type=email], input[
 .ai-c{
     align-items: center;
 }
+.ai-fs{
+    align-items: flex-start;
+}
 .status.realizations{
   width: calc(100% - 300px);
 }
