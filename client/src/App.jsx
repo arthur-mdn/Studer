@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
 import config from './config';
 import './App.css';
@@ -8,14 +8,14 @@ import CardDetail from "./components/CardDetail.jsx";
 import ChatList from "./components/ChatList.jsx";
 import ChatDetail from "./components/ChatDetail.jsx";
 import { FaMessage } from "react-icons/fa6";
-import {useModal} from "./components/Modale/ModaleContext";
+import { useModal } from "./components/Modale/ModaleContext";
 import QuizCard from "./components/QuizCard.jsx";
 import QuizActions from "./components/QuizActions.jsx";
 import Results from "./components/Results.jsx";
 
 function App() {
     const [socket, setSocket] = useState(null);
-    const {newModal} = useModal();
+    const { newModal } = useModal();
     const [status, setStatus] = useState('connecting');
     const [error, setError] = useState(null);
     const [userConfig, setUserConfig] = useState(null);
@@ -45,6 +45,10 @@ function App() {
     const [selectedQuiz, setSelectedQuiz] = useState(null);
     const [realizationCount, setRealizationCount] = useState(0);
     const [showResults, setShowResults] = useState(false);
+    const [swiping, setSwiping] = useState(false);
+
+    // Array of references for TinderCards
+    const cardRefs = useRef([]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -90,7 +94,6 @@ function App() {
         newSocket.on('config_updated', (config) => {
             setUserConfig(config);
             setStatus('ready');
-            newSocket.emit('request_realizations', { userId: config.token });
             newSocket.emit('request_quizzes', { userId: config.token });
             if(config.finished){
                 setShowResults(true);
@@ -104,7 +107,7 @@ function App() {
         });
 
         newSocket.on('realizations', (newRealizations) => {
-            setRealizations(prev => [...prev, ...newRealizations]);
+            setRealizations(prev => [...prev, ...newRealizations.filter(newRealization => !prev.some(realization => realization._id === newRealization._id))]);
         });
 
         newSocket.on('quizzes', (newQuizzes) => {
@@ -224,22 +227,27 @@ function App() {
 
     const handleRate = (action) => {
         if (realizations.length > 0 && socket) {
-            const currentRealization = realizations[0]._id;
-            socket.emit('rate_realization', {
-                userId: localStorage.getItem('userToken'),
-                realizationId: currentRealization,
-                action
-            });
+            const currentRealization = realizations[realizations.length - 1]._id;
+            setSwiping(true);
 
-            setRealizations(prev => prev.filter(r => r._id !== currentRealization));
-            setRealizationCount(prev => prev + 1);
+            setTimeout(() => {
+                socket.emit('rate_realization', {
+                    userId: localStorage.getItem('userToken'),
+                    realizationId: currentRealization,
+                    action
+                });
 
-            if ((realizationCount + 1) % 3 === 0 && quizzes.length > 0) {
-                setSelectedQuiz(quizzes.shift());
-                setView('quiz');
-            }else{
-                setView('list');
-            }
+                setRealizations(prev => prev.filter(r => r._id !== currentRealization));
+                setRealizationCount(prev => prev + 1);
+                setSwiping(false);
+
+                if ((realizationCount + 1) % 3 === 0 && quizzes.length > 0) {
+                    setSelectedQuiz(quizzes.shift());
+                    setView('quiz');
+                } else {
+                    setView('list');
+                }
+            }, 300);
         }
     };
 
@@ -348,16 +356,38 @@ function App() {
         }
     }
 
+    const swipe = (direction) => {
+        const cards = cardRefs.current;
+        if (cards.length > 0) {
+            const card = cards[realizations.length - 1];
+            if (card) {
+                card.swipe(direction);
+            }
+        }
+    };
 
     const renderRealizations = () => {
         switch (view) {
             case 'list':
                 if (realizations.length > 0) {
-                    const currentRealization = realizations[0];
+                    cardRefs.current = cardRefs.current.slice(0, realizations.length);
                     return (
                         <>
-                            <Card realization={currentRealization} onView={() => handleViewDetails(currentRealization)} onAddToChat={() => handleAddToChat(currentRealization)} />
-                            <CardActions onRate={handleRate} />
+                            <div className="cardContainer">
+                                {realizations.map((realization, index) => (
+                                    <Card
+                                        key={realization._id + index}
+                                        realization={realization}
+                                        onView={() => handleViewDetails(realization)}
+                                        onAddToChat={() => handleAddToChat(realization)}
+                                        onRate={handleRate}
+                                        swiping={swiping}
+                                        ref={el => cardRefs.current[index] = el}
+                                        index={index}
+                                    />
+                                ))}
+                            </div>
+                            <CardActions onRate={handleRate} fullyDisabled={swiping} swipe={swipe}/>
                         </>
                     );
                 } else {
@@ -365,7 +395,7 @@ function App() {
                 }
             case 'detail':
                 if (selectedRealization) {
-                    return <CardDetail realization={selectedRealization} onBack={handleBackToList} onOpenChat={()=> handleAddToChat(selectedRealization)} onRate={handleRate}/>;
+                    return <CardDetail swipe={swipe} realization={selectedRealization} onBack={handleBackToList} onOpenChat={()=> handleAddToChat(selectedRealization)} onRate={handleRate}/>;
                 }
                 break;
             case 'chatDetail':
@@ -397,7 +427,6 @@ function App() {
                 break;
             case 'final':
                 return <>
-                    {/*<Results preferences={userConfig?.preferences} />*/}
                     <Results userPreferences={userConfig?.preferences}/>
                 </>;
                 break;
@@ -409,8 +438,8 @@ function App() {
         }
     };
 
-                const renderContent = () => {
-                                                switch (status) {
+    const renderContent = () => {
+        switch (status) {
             case 'connecting':
                 return <div className="status">Connecting to server...</div>;
             case 'requesting_code':
@@ -437,8 +466,8 @@ function App() {
 
                     </>
                 );
-                                                    case 'disconnected':
-                                                        return <div className="status">Disconnected. Attempting to reconnect...</div>;
+            case 'disconnected':
+                return <div className="status">Disconnected. Attempting to reconnect...</div>;
             case 'connection_failed':
                 return (
                     <div className="status">
@@ -456,7 +485,6 @@ function App() {
         }
     };
 
-
     return (
         <div className="App">
             <button id={"reset"} onClick={() => {
@@ -466,9 +494,6 @@ function App() {
                 {JSON.stringify(userConfig?.preferences)}
                 Reset
             </button>
-            {/*<button id={"ask-results-via-socket"} onClick={() => {*/}
-            {/*    socket.emit('ask_results', { userId: localStorage.getItem('userToken') });*/}
-            {/*} }>results{showResults ? "Y" : "N"}</button>*/}
             <div className={"startingScreen"}>
                 <img src={"/elements/logo.svg"}/>
             </div>
