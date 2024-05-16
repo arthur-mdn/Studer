@@ -383,7 +383,7 @@ function App() {
                             <div className="cardContainer">
                                 {cardsToShow.map((realization, index) => (
                                     <Card
-                                        key={realization._id + index}
+                                        key={realization._id}
                                         realization={realization}
                                         onView={() => handleViewDetails(realization)}
                                         onAddToChat={() => handleAddToChat(realization)}
