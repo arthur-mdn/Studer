@@ -12,6 +12,7 @@ import { useModal } from "./components/Modale/ModaleContext";
 import QuizCard from "./components/QuizCard.jsx";
 import QuizActions from "./components/QuizActions.jsx";
 import Results from "./components/Results.jsx";
+import Step2 from "./components/Step2.jsx";
 
 function App() {
     const [socket, setSocket] = useState(null);
@@ -426,20 +427,9 @@ function App() {
                 }
                 break;
             case 'step2':
-                return <div className={"h100 fc g1 ai-c jc-c"}>
-                    <div className={"fc ai-c p1 g1"}>
-                        <h2>Étape 2</h2>
-                        <p>Il est temps de séduire le parcours qui t'intéresse !</p>
-                        <div className={"placeholder-video"}>
-                            <FaPlay/>
-                        </div>
-                        <div className={"fr g0-5"}>
-                            <button><FaArrowLeftLong/></button>
-                            <button><FaArrowRightLong/></button>
-                        </div>
-                    </div>
-                    <button onClick={() => setView('final')} style={{backgroundColor:"#C83E4D"}}>Résultats</button>
-                </div>;
+                return <>
+                    <Step2 userPreferences={userConfig?.preferences} onFinal={() => {setView('final')}}/>
+                </>;
                 break;
             case 'final':
                 return <>

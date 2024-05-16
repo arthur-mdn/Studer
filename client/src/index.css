@@ -781,3 +781,17 @@ transform: translateY(-50%);
   align-items: center;
   font-size: 2rem;
 }
+
+.step2{
+
+}
+.step2 video{
+  width: 90%;
+  max-width: 500px;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+.startingScreen{
+  display: none;
+}
