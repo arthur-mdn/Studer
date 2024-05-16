@@ -428,7 +428,7 @@ function App() {
                 break;
             case 'step2':
                 return <>
-                    <Step2 userPreferences={userConfig?.preferences} onFinal={() => {setView('final')}}/>
+                    <Step2 userPreferences={userConfig?.preferences} onFinal={() => {setView('final')}} onBack={() => {setView('list')}}/>
                 </>;
                 break;
             case 'final':

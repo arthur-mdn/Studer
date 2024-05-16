@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 
-function Step2({ userPreferences, onFinal }) {
+function Step2({ userPreferences, onFinal, onBack }) {
     const [sequence, setSequence] = useState("");
     const [disabled, setDisabled] = useState(false);
     const [timeoutId, setTimeoutId] = useState(null);
@@ -38,6 +38,9 @@ function Step2({ userPreferences, onFinal }) {
             setSequence(sequence.slice(0, -2));
         } else if (/\d$/.test(sequence)) {
             setSequence(sequence.slice(0, -1));
+        }
+        if(sequence === ""){
+            onBack();
         }
 
         setDisabled(false);
