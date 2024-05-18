@@ -739,7 +739,7 @@ transform: translateY(-50%);
   max-width: 20rem;
   /* Animation to pulse and then slide down */
   animation: pulse 0.8s ease-in-out 2,
-  slideDown 1s ease-out 1.6s;
+  slideUp 1s ease-out 1.6s;
 }
 
 @keyframes pulse {
@@ -751,12 +751,12 @@ transform: translateY(-50%);
   }
 }
 
-@keyframes slideDown {
+@keyframes slideUp {
   0% {
     transform: translateY(0) scale(1);
   }
   100% {
-    transform: translateY(130vh) scale(0.5) rotate(90deg);
+    transform:  translateY(-80vh) scale(0.4) rotate(-180deg) ;
   }
 }
 
