@@ -13,6 +13,7 @@ import QuizCard from "./components/QuizCard.jsx";
 import QuizActions from "./components/QuizActions.jsx";
 import Results from "./components/Results.jsx";
 import Step2 from "./components/Step2.jsx";
+import {FaCog} from "react-icons/fa";
 
 function App() {
     const [socket, setSocket] = useState(null);
@@ -380,6 +381,38 @@ function App() {
 
                     return (
                         <>
+                            <div className={"mobile-menu fr jc-sb"}>
+                                <button onClick={toggleChat} className={"display-mobile"}>
+                                    <FaMessage/>
+                                </button>
+                                <img src={"/elements/logo.svg"} className={"logo"} alt={"logo"} style={{width: "2rem"}}/>
+                                <button onClick={() => {
+                                    newModal(
+                                        {
+                                            boutonClose: false,
+                                            titre: "Préférences",
+                                            htmlContent: `
+                                                <div class="fc jc-c g1">
+                                                    <div class="fr g1">
+                                                        ${JSON.stringify(userConfig?.preferences)}
+                                                    </div>
+                                                    <button id={"reset"} onclick={
+                                                        localStorage.clear();
+                                                        window.location.reload();
+                                                    }>
+                                                        Réinitialiser
+                                                    </button>
+                                                </div>
+                                                `,
+                                            texteBoutonAction: "Fermer",
+                                            onValidate: () => {
+                                            }
+                                        }
+                                    )
+                                }} style={{marginLeft:"auto"}}>
+                                    <FaCog/>
+                                </button>
+                            </div>
                             <div className="cardContainer">
                                 {cardsToShow.map((realization, index) => (
                                     <Card
@@ -394,7 +427,7 @@ function App() {
                                     />
                                 ))}
                             </div>
-                            <CardActions onRate={handleRate} fullyDisabled={swiping} swipe={swipe} />
+                            <CardActions onRate={handleRate} fullyDisabled={swiping} swipe={swipe}/>
                         </>
                     );
                 } else {
@@ -402,7 +435,8 @@ function App() {
                 }
             case 'detail':
                 if (selectedRealization) {
-                    return <CardDetail swipe={swipe} realization={selectedRealization} onBack={handleBackToList} onOpenChat={()=> handleAddToChat(selectedRealization)} onRate={handleRate}/>;
+                    return <CardDetail swipe={swipe} realization={selectedRealization} onBack={handleBackToList}
+                                       onOpenChat={() => handleAddToChat(selectedRealization)} onRate={handleRate}/>;
                 }
                 break;
             case 'chatDetail':
@@ -455,16 +489,15 @@ function App() {
                     <>
                         {(view !== "final" && view !== "step2") ? (
                             <>
-                                <div className={"mobile-menu display-mobile"}>
-                                    <button onClick={toggleChat}>
-                                        <FaMessage/>
-                                    </button>
-                                </div>
                                 <ChatList isOpen={isChatOpen} toggleChat={toggleChat} chatHistory={chatHistory}
                                           onOpenChatDetail={handleOpenChatDetail}/>
-                                <div className="status realizations">
-                                    {renderRealizations()}
+                                <div className={"fc g0 ai-c jc-c w100"}>
+
+                                    <div className="status realizations">
+                                        {renderRealizations()}
+                                    </div>
                                 </div>
+
                             </>
                         ) : <div className="status results-container w100 h100 fc ai-c jc-c">
                             {renderRealizations()}
@@ -493,12 +526,6 @@ function App() {
 
     return (
         <div className="App">
-            <button id={"reset"} onClick={() => {
-                localStorage.clear();
-                window.location.reload();
-            }}>
-                {JSON.stringify(userConfig?.preferences)}
-            </button>
             <div className={"startingScreen"}>
                 <img src={"/elements/logo.svg"}/>
             </div>
