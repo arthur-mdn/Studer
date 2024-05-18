@@ -387,14 +387,22 @@ function App() {
                                 </button>
                                 <img src={"/elements/logo.svg"} className={"logo"} alt={"logo"} style={{width: "2rem"}}/>
                                 <button onClick={() => {
+                                    const formattedPreferences = Object.entries(userConfig?.preferences || {}).map(([key, value]) => {
+                                        const labels = {
+                                            crea: "Création Numérique",
+                                            com: "Communication",
+                                            dev: "Développement"
+                                        };
+                                        return `<div>${labels[key]}: ${value.toFixed(2)}</div>`;
+                                    }).join('');
                                     newModal(
                                         {
                                             boutonClose: false,
                                             titre: "Préférences",
                                             htmlContent: `
                                                 <div class="fc jc-c g1">
-                                                    <div class="fr g1">
-                                                        ${JSON.stringify(userConfig?.preferences)}
+                                                    <div class="fc">
+                                                    ${formattedPreferences}
                                                     </div>
                                                     <button id={"reset"} onclick={
                                                         localStorage.clear();
