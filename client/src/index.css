@@ -576,7 +576,7 @@ button:disabled{
 .mobile-menu{
   z-index: 4;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: #C83E4D;
   padding: 0.8rem 1.25rem;
 
 }
