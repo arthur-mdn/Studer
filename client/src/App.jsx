@@ -404,10 +404,7 @@ function App() {
                                                     <div class="fc">
                                                     ${formattedPreferences}
                                                     </div>
-                                                    <button id={"reset"} onclick={
-                                                        localStorage.clear();
-                                                        window.location.reload();
-                                                    }>
+                                                    <button id={"reset"} onclick="localStorage.clear();window.location.reload()">
                                                         Réinitialiser
                                                     </button>
                                                 </div>
