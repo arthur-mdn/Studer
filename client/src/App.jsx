@@ -14,6 +14,7 @@ import QuizActions from "./components/QuizActions.jsx";
 import Results from "./components/Results.jsx";
 import Step2 from "./components/Step2.jsx";
 import {FaCog} from "react-icons/fa";
+import Bar from "./components/Bar.jsx";
 
 function App() {
     const [socket, setSocket] = useState(null);
@@ -381,43 +382,7 @@ function App() {
 
                     return (
                         <>
-                            <div className={"mobile-menu fr jc-sb"}>
-                                <button onClick={toggleChat} className={"display-mobile"}>
-                                    <FaMessage/>
-                                </button>
-                                <img src={"/elements/logo.svg"} className={"logo"} alt={"logo"} style={{width: "2rem"}}/>
-                                <button onClick={() => {
-                                    const formattedPreferences = Object.entries(userConfig?.preferences || {}).map(([key, value]) => {
-                                        const labels = {
-                                            crea: "Création Numérique",
-                                            com: "Communication",
-                                            dev: "Développement"
-                                        };
-                                        return `<div>${labels[key]}: ${value.toFixed(2)}</div>`;
-                                    }).join('');
-                                    newModal(
-                                        {
-                                            boutonClose: false,
-                                            titre: "Préférences",
-                                            htmlContent: `
-                                                <div class="fc jc-c g1">
-                                                    <div class="fc">
-                                                    ${formattedPreferences}
-                                                    </div>
-                                                    <button id={"reset"} onclick="localStorage.clear();window.location.reload()">
-                                                        Réinitialiser
-                                                    </button>
-                                                </div>
-                                                `,
-                                            texteBoutonAction: "Fermer",
-                                            onValidate: () => {
-                                            }
-                                        }
-                                    )
-                                }} style={{marginLeft:"auto"}}>
-                                    <FaCog/>
-                                </button>
-                            </div>
+                            <Bar userConfig={userConfig} toggleChat={toggleChat}/>
                             <div className="cardContainer">
                                 {cardsToShow.map((realization, index) => (
                                     <Card
@@ -436,7 +401,10 @@ function App() {
                         </>
                     );
                 } else {
-                    return <div className="status">No more realizations to rate.</div>;
+                    return <>
+                        <Bar userConfig={userConfig} toggleChat={toggleChat}/>
+                        <div className="status">No more realizations to rate.</div>
+                    </>;
                 }
             case 'detail':
                 if (selectedRealization) {
@@ -459,15 +427,19 @@ function App() {
                 if (selectedQuiz) {
                     return (
                         <>
-                            <QuizCard quiz={selectedQuiz} onAnswer={handleQuizAnswer} />
-                            <QuizActions onAnswer={handleQuizAnswer} onSkip={handleQuizSkip} />
+                            <QuizCard quiz={selectedQuiz} onAnswer={handleQuizAnswer}/>
+                            <QuizActions onAnswer={handleQuizAnswer} onSkip={handleQuizSkip}/>
                         </>
                     );
                 }
                 break;
             case 'step2':
                 return <>
-                    <Step2 userPreferences={userConfig?.preferences} onFinal={() => {setView('final')}} onBack={() => {setView('list')}}/>
+                    <Step2 userPreferences={userConfig?.preferences} onFinal={() => {
+                        setView('final')
+                    }} onBack={() => {
+                        setView('list')
+                    }}/>
                 </>;
                 break;
             case 'final':
@@ -477,6 +449,7 @@ function App() {
                 break;
             default:
                 return <>
+                    <Bar userConfig={userConfig} toggleChat={toggleChat}/>
                     <div className="status">Aucune réalisation restante</div>
                 </>;
 
