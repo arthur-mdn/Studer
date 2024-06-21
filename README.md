@@ -1,5 +1,6 @@
 # Studer - Wild Work Week 2024 - MMI Toulon
 A web application inspired by Tinder, created during the "Wild Work Week" at the University of Toulon, to promote the MMI training and the work done by students.
+
 ![Studer](https://github.com/arthur-mdn/Studer/blob/main/client/public/elements/studer.png)
 
 ## Description
